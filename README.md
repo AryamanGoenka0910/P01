@@ -1,4 +1,4 @@
-# P01: Team Mango
+# Foodbook by Team Mango
 
 #### Roster and Roles
 - Aryaman Goenka: 
@@ -6,6 +6,7 @@
 - Haotian Gan:
 
 #### Abstract
+Discover new recipes, resturants, and friends interested in food with Foodbook. Our service allows you to search for millions of recipes, look through posts about food, and save recipes to your personal cookbook. 
 
 #### Set-up
 1. Clone this repo using `git clone https://github.com/AryamanGoenka0910/P00`

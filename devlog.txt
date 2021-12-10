@@ -3,16 +3,16 @@ SoftDev
 P01
 2021-12-09
 
-aryamanG, haotianG, sadidE 12-09-2021 8:00
-- Recieved feedback from peers about devlog 
-- Requires more elaboraiton on APIs, a breakdown of database structure, and information on our endpoints
+aryamanG, haotianG, sadidE --12-09-2021 8:00
+- Received feedback from peers about design doc 
+- Requires more elaboration on APIs, a breakdown of database structure, and information on our endpoints
 
-aryamanG - 2021-12-09 14:00
+aryamanG -- 2021-12-09 14:00
 - Revised Site Components and site description
 - Added routes section and database organization
 - Divided flow chart into site map and component map
 
-haotianG - 2021-12-09 20:00
+haotianG -- 2021-12-09 20:00
 - Refined descriptions of APIs 
 - Detailed routes
 - Elaborated on databases organization

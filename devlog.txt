@@ -1,14 +1,21 @@
-Devlog:
+Team Mango - Aryaman Goenka, Sadid Ethun, Haotian Gan
+SoftDev
+P01
+2021-12-09
 
-12-09-2021
-Recieved feedback from peers about devlog: 
-  - It needs more elaboraiton on the APIs
-  - It needs a breakdown of how each database is structured
-  - It needs information on how our endpoints will work
+aryamanG, haotianG, sadidE 12-09-2021 8:00
+- Recieved feedback from peers about devlog 
+- Requires more elaboraiton on APIs, a breakdown of database structure, and information on our endpoints
 
-The three of us worked on the design doc for about four hours. We wrote up elaboration for each of the APIs, 
-drew up a site map, and also changed one of the APIs we had planned to use for another one. 
+aryamanG - 2021-12-09 14:00
+- Revised Site Components and site description
+- Added routes section and database organization
+- Divided flow chart into site map and component map
 
-The design doc has increased from one page to six pages. We plan on working on the project this weekend.
+haotianG - 2021-12-09 20:00
+- Refined descriptions of APIs 
+- Detailed routes
+- Elaborated on databases organization
 
-12-10-2021
+
+

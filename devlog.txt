@@ -1,0 +1,14 @@
+Devlog:
+
+12-09-2021
+Recieved feedback from peers about devlog: 
+  - It needs more elaboraiton on the APIs
+  - It needs a breakdown of how each database is structured
+  - It needs information on how our endpoints will work
+
+The three of us worked on the design doc for about four hours. We wrote up elaboration for each of the APIs, 
+drew up a site map, and also changed one of the APIs we had planned to use for another one. 
+
+The design doc has increased from one page to six pages. We plan on working on the project this weekend.
+
+12-10-2021

@@ -17,5 +17,7 @@ haotianG -- 2021-12-09 20:00
 - Detailed routes
 - Elaborated on databases organization
 
+aryamanG -- 2021-12-12 15:00
+- Edited Project abstract, roles and Set Up instructions
 
 

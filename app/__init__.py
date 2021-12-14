@@ -14,6 +14,7 @@ app.secret_key = 'Mango'
 # Utility function to check if there is a session
 def logged_in():
     return session.get('username') is not None
+    
 @app.route('/', methods=['GET', 'POST'])
 def landing():
     # Check for session existance

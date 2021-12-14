@@ -12,23 +12,20 @@
 </head>
 
 <body>
-    <center>
-        <h1>Login</h1>
-    </center>
-    <center>
-        {% if error %}
-        <p style="color: red">Sorry, username or password incorrect</p>
-        {% endif %}
-        <div>
-            <form method="post" action="/login">
-                <input type="text" name="username" placeholder="Username">
-                <br>
-                <input type="password" name="password" placeholder="Password">
-                <br>
-                <input type="submit" name="authenticate" value="Log In">
-            </form>
-        </div>
-    </center>
+
+    <h1>Login</h1>
+    {% if error %}
+    <p style="color: red">Sorry, username or password incorrect</p>
+    {% endif %}
+    <div>
+        <form method="post" action="/login">
+            <input type="text" name="username" placeholder="Username">
+            <br>
+            <input type="password" name="password" placeholder="Password">
+            <br>
+            <input type="submit" name="authenticate" value="Log In">
+        </form>
+    </div>
 </body>
 
 </html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>{{ title }}</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static',filename='styles.css') }}"
+    />
+  </head>
+
+  <body>
+    <div style="padding: 30px;">
+      <a href="/"><p>Return to Homepage</p></a>
+      <h3>{{ title }}</h3>
+      {% if original_author %}
+      <h4>
+        By <a href="/blog/{{user_id}}">{{ username }}</a>
+        <a href="/entry/{{entry_id}}/edit">(Edit Your Post)</a>
+      </h4>
+      {% else %}
+      <h4>By <a href="/blog/{{user_id}}">{{ username }}</a></h4>
+      {% endif %}
+      <div style="width: 80%;">
+        <p>{{entry_text}}</p>
+      </div>
+    </div>
+  </body>
+</html>

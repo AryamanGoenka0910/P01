@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Create a Post</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static',filename='styles.css') }}"
+    />
+  </head>
+
+  <body>
+    <div class="centerFillFlex">
+      <a href="/"><p>Return to Homepage</p></a>
+      <h3>Create a Post:</h3>
+      <form action="/blog/newBlogEntry" method="post">
+        <p>Post Title:</p>
+        <textarea name="title" cols="100"></textarea>
+        <br />
+        <p>Post Body:</p>
+        <textarea name="entry_text" rows="10" cols="100"></textarea>
+        <p></p>
+        <input type="submit" name="sub" type="submit" class="button" />
+      </form>
+      <p>
+        <a href="/blog/{{ user_id }}"
+          >Forget this. Discard my draft and take me back.</a
+        >
+      </p>
+    </div>
+  </body>
+</html>

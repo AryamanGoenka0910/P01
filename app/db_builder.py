@@ -6,16 +6,17 @@ P00: ArRESTed Development
 '''
 
 import sqlite3   #enable control of an sqlite database
+import random 
 
 DB_FILE="Mangos.db"
-db = sqlite3.connect(DB_FILE) #open if file exists, otherwise create
-
+db = sqlite3.connect(DB_FILE, check_same_thread=False)
 
 def dbseteup():
     c = db.cursor()               #facilitate db ops -- you will use cursor to trigger db events
 
     c.execute("DROP TABLE IF EXISTS Entries")
     command = "CREATE TABLE Entries (ID INTEGER PRIMARY KEY AUTOINCREMENT, Title TEXT, Text TEXT, UserID INTEGER)"
+    c.execute(command) 
 
     c.execute("DROP TABLE IF EXISTS Users")
     command = "CREATE TABLE Users (ID INTEGER PRIMARY KEY AUTOINCREMENT, Username TEXT, Password TEXT)"
@@ -91,10 +92,11 @@ def get_entry(entry_id):
         "user_id": user_id
     } for (entry_id, entry_text, title, user_id) in result][0] #returning only the selected entry
 
+## (edited)
 def get_entries_of_user(user_id, offset, limit):
     """Returns a list of lists with user entries from the offset to the limit"""
     c = db.cursor()
-    result = list(c.execute(f'select entry_id, entry_text, title, user_id from entries where user_id == ? order by entry_id limit ? offset ? ', (user_id, limit, offset)))
+    result = list(c.execute(f'SELECT ID, Text, Title, UserID FROM Entries WHERE UserID == ? order by ID limit ? offset ? ', (user_id, limit, offset)))
     return [{
         "entry_id": entry_id,
         "entry_text": entry_text,
@@ -102,10 +104,21 @@ def get_entries_of_user(user_id, offset, limit):
         "user_id": user_id
     } for (entry_id, entry_text, title, user_id) in result] #all the entries of a user
 
-def get_username_from_id(user_id):
-    """returns the username given the user id"""
+
+## (edited)
+def get_id_from_username(username):
+    """returns the user id given the username"""
     c = db.cursor()
-    result = list(c.execute(f'SELECT username from users where user_id == ?', (user_id, )))[0][0]
+    c.execute("SELECT ID from Users where Username == ?", [username])
+    row = c.fetchone()
+    if row is not None:
+        result = row[0]
+    return result
+
+def get_username_from_id(user_id):
+    """returns the username given the user_id"""
+    c = db.cursor()
+    result = list(c.execute(f'SELECT Username from Users where ID == ?', (user_id, )))[0][0]
     return result
 
 def getMostRecentEntry(user_id):
@@ -118,7 +131,6 @@ def getMostRecentEntry(user_id):
         "title": title,
         "user_id": user_id
     } for (entry_id, entry_text, title, user_id) in result][0] #returning first entry in reordered list
-
 
 def get_random_users():
     """Returns either 10 random users or all users to display as recommended blogs on the homepage"""

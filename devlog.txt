@@ -20,4 +20,13 @@ haotianG -- 2021-12-09 20:00
 aryamanG -- 2021-12-12 15:00
 - Edited Project abstract, roles and Set Up instructions
 
+aryamanG -- 2021-13-12 8:00
+- Login and Signup functionality with SQlite
+
+aryamanG -- 2021-13-12 8:00
+- post functionality and basic routing to allow users to view and create posts
+
+aryamanG -- 2020-13-12 18:00
+- refactoring routing to stop non-loged in site visitors from accessing blog information
+
 

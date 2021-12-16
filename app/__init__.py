@@ -11,54 +11,53 @@ from flask import Flask, render_template, request, session, redirect, url_for
 app = Flask(__name__)
 app.secret_key = 'Mango'
 
+
 # Utility function to check if there is a session
 def logged_in():
     return session.get('username') is not None
 
 @app.route('/', methods=['GET', 'POST'])
 def landing():
-    # Check for session existance
-    #db_builder.dbseteup()
+    # Check for session existence
+    #db_builder.dbsetup()
     if logged_in():
-        username = session['username']
-        # return render_template('index.html', username=username, search=filter)
-        user_id = db_builder.get_id_from_username(username)
-        return render_template('home.html', username=username, user_id=user_id)
+      username = session['username']
+      user_id = db_builder.get_id_from_username(username)
+      return render_template('home.html', username=username, user_id=user_id)
     else:
-        # If not logged in, show login page
-        return render_template('intro.html')
+      # If not logged in, show login page
+      return render_template('intro.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     method = request.method
-
     # Check for session existance
     if method == 'GET':
-        if logged_in():
-            return redirect(url_for('landing'))
-        else:
-            # If not logged in, show login page
-            return render_template('login.html', error=False)
+      if logged_in():
+        return redirect(url_for('landing'))
+      else:
+        # If not logged in, show login page
+        return render_template('login.html', error=False)
 
     if method == 'POST':
 
-        # Get information from request.form since it is submitted via post
-        username = request.form['username']
-        password = request.form['password']
-        error = db_builder.login(username, password)
+      # Get information from request.form since it is submitted via post
+      username = request.form['username']
+      password = request.form['password']
+      error = db_builder.login(username, password)
 
-        if error:
-            # If incorrect, give feedback to the user
-            return render_template('login.html', error=error)
-        else:
-            # Store user info into a cookie
-            session['username'] = username
-            return redirect(url_for('landing'))
+    if error:
+        # If incorrect, give feedback to the user
+        return render_template('login.html', error=error)
+    else:
+        # Store user info into a cookie
+        session['username'] = username
+        return redirect(url_for('landing'))
+          
 
 @app.route('/register', methods=['GET','POST'])
 def register():
     method = request.method
-
     # Check for session existence
     if method == "GET":
         if logged_in():
@@ -125,6 +124,22 @@ def display_user_blog(user_id):
         **templateArgs
     )
 
+@app.route('/entry/<int:entry_id>', methods=['GET', 'POST'])
+def display_entry(entry_id):
+    """Displays an entry of another user's blog to the user"""
+
+    if not logged_in():
+        # If not logged in, redirect to the main page
+        return redirect(url_for('landing'))
+
+    template_args = {}
+    
+    template_args = db_builder.get_entry(entry_id) #see get_entry in database.py
+    template_args["username"] = db_builder.get_username_from_id(template_args["user_id"])
+    template_args["original_author"] = session.get("user_id") == template_args["user_id"] #logic check if the user currently viewing a blog is viewing their own blog
+
+    return render_template('entry.html', **template_args)
+
 @app.route('/blog/<int:user_id>/newBlogEntry', methods=['GET', 'POST'])
 def create_new_entry(user_id):
     """Allows the user to create a new blog entry"""
@@ -151,22 +166,6 @@ def create_new_entry(user_id):
         #return redirect(f"/entry/{assumed_entry_id}")
         return redirect(f"/blog/{user_id}")
         
-@app.route('/entry/<int:entry_id>', methods=['GET', 'POST'])
-def display_entry(entry_id):
-    """Displays an entry of another user's blog to the user"""
-
-    if not logged_in():
-        # If not logged in, redirect to the main page
-        return redirect(url_for('landing'))
-
-    template_args = {}
-    
-    template_args = db_builder.get_entry(entry_id) #see get_entry in database.py
-    template_args["username"] = db_builder.get_username_from_id(template_args["user_id"])
-    template_args["original_author"] = session.get("user_id") == template_args["user_id"] #logic check if the user currently viewing a blog is viewing their own blog
-
-    return render_template('entry.html', **template_args)
-
 
 @app.route('/entry/<int:entry_id>/edit', methods=['GET', 'POST'])
 def display_entry_edit(entry_id):
@@ -207,7 +206,10 @@ def delete():
     except Exception:
         return render_template("404.html")
 
+@app.route('/restaurants', methods=['GET', 'POST'])
+def restaurant():
+    return render_template('restaurants.html')
+
 if __name__ == '__main__':
-    # db_builder.dbseteup()
     app.debug = True
     app.run()

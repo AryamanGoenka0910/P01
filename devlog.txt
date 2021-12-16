@@ -29,4 +29,10 @@ aryamanG -- 2021-13-12 8:00
 aryamanG -- 2020-13-12 18:00
 - refactoring routing to stop non-loged in site visitors from accessing blog information
 
+haotianG -- 2020-16-12 1:00
+- Updated function for setting up the database
+- Added Yelp Fusion API to design document (it's better than Documenu for finding resturants)
+- Worked on home page
+- Planning to setup user profiles soon
+
 

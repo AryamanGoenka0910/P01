@@ -101,6 +101,9 @@ def logout():
     # After logout, return to login page
     return redirect(url_for('landing'))
 
+@app.route('/restaurants', methods=['GET', 'POST'])
+def restaurant():
+    return render_template('restaurants.html')
 
 if __name__ == '__main__':
     app.debug = True

@@ -3,7 +3,7 @@
 #### Roster and Roles
 - Aryaman Goenka (PM): DB, Flask Routing, Find Food Facts Function
 - Sadid Ethun: Templates, Bootstrap, User Pages
-- Haotian Gan: Restaurant Suggestions, Find recepis and restaurants functions, DB and API Interaction 
+- Haotian Gan: Restaurant Suggestions, Find recipes and restaurants functions, DB and API Interaction 
 
 #### Abstract
 Discover new recipes, resturants, and friends interested in food with Foodbook. Our service allows you to search for millions of recipes, look through posts about food, and save recipes to your personal cookbook. 

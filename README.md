@@ -23,6 +23,6 @@ The following instructions assume that you have [Python 3.9](https://www.python.
 
 4. Run the app via `(your_env_name) cd P01/app && python3 __init__.py`
 
-## Acknowledgment
+## Acknowledgments
 Prof. Topher Mykolyk <br>
 Stuyvesant High School

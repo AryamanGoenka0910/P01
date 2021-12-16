@@ -117,30 +117,16 @@ def display_user_blog(user_id):
     templateArgs = {
         "entries" : db_builder.get_entries_of_user(user_id, 0, 50), #see get_entries_of_user in database.py
         "username" : session.get('username'),#see get_username_from_id in database.py
-        "lookingAtOwnBlog": db_builder.get_id_from_username(session.get('username')) == user_id #session authentication for the user
+        "lookingAtOwnBlog": db_builder.get_id_from_username(session.get('username')) == user_id, #session authentication for the user
+        "user_id": user_id
     }
     return render_template(
         'blog.html',
         **templateArgs
     )
 
-@app.route('/entry/<int:entry_id>', methods=['GET', 'POST'])
-def display_entry(entry_id):
-    """Displays an entry of another user's blog to the user"""
-    template_args = {}
-    try:
-        template_args = db_builder.get_entry(entry_id) #see get_entry in database.py
-        template_args["username"] = db_builder.get_username_from_id(template_args["user_id"])
-        template_args["original_author"] = session.get("user_id") == template_args["user_id"] #logic check if the user currently viewing a blog is viewing their own blog
-    except Exception:
-        return render_template("404.html")
-    return render_template(
-        'entry.html',
-        **template_args
-    )
-
-@app.route('/blog/newBlogEntry', methods=['GET', 'POST'])
-def create_new_entry():
+@app.route('/blog/<int:user_id>/newBlogEntry', methods=['GET', 'POST'])
+def create_new_entry(user_id):
     """Allows the user to create a new blog entry"""
     if not logged_in():
         # If not logged in, redirect to the main page
@@ -164,29 +150,45 @@ def create_new_entry():
         #assumed_entry_id = db_builder.getMostRecentEntry(user_id)["entry_id"]
         #return redirect(f"/entry/{assumed_entry_id}")
         return redirect(f"/blog/{user_id}")
+        
+@app.route('/entry/<int:entry_id>', methods=['GET', 'POST'])
+def display_entry(entry_id):
+    """Displays an entry of another user's blog to the user"""
+
+    if not logged_in():
+        # If not logged in, redirect to the main page
+        return redirect(url_for('landing'))
+
+    template_args = {}
     
-    
-    
+    template_args = db_builder.get_entry(entry_id) #see get_entry in database.py
+    template_args["username"] = db_builder.get_username_from_id(template_args["user_id"])
+    template_args["original_author"] = session.get("user_id") == template_args["user_id"] #logic check if the user currently viewing a blog is viewing their own blog
+
+    return render_template('entry.html', **template_args)
+
 
 @app.route('/entry/<int:entry_id>/edit', methods=['GET', 'POST'])
 def display_entry_edit(entry_id):
     """Allows a user to edit their own entry"""
-    try:
-        if(session.get("user_id") == None):
-            return redirect("/")
-        if request.method == 'POST':
-            author_id = db_builder.get_entry(entry_id)["user_id"]
-            if(not author_id == session.get("user_id")):
-                return "Sorry, you can't modify this blog post if you aren't its author."
-            new_entry_text = request.form.get('entry_text')
-            new_title = request.form.get('title')
-            db_builder.edit_entry(entry_id, new_entry_text, new_title)
-            return redirect(f"/entry/{entry_id}")
-        if request.method == 'GET':
-            templateArgs = db_builder.get_entry(entry_id)
-            return render_template('entry_edit.html', **templateArgs) #displays the text boxes with current text and title of the post already displayed
-    except Exception:
-        return render_template("404.html")
+
+    if not logged_in():
+        # If not logged in, redirect to the main page
+        return redirect(url_for('landing'))
+
+    if request.method == 'GET':
+        templateArgs = db_builder.get_entry(entry_id)
+        return render_template('entry_edit.html', **templateArgs) #displays the text boxes with current text and title of the post already displayed
+ 
+    if request.method == 'POST':
+        author_id = db_builder.get_entry(entry_id)["user_id"]
+        if(not author_id == session.get("user_id")):
+            return "Sorry, you can't modify this blog post if you aren't its author."
+        new_entry_text = request.form.get('entry_text')
+        new_title = request.form.get('title')
+        db_builder.edit_entry(entry_id, new_entry_text, new_title)
+        return redirect(f"/entry/{entry_id}")
+    
 
 @app.route('/entry/delete', methods=['POST'])
 def delete():

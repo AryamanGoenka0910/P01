@@ -81,10 +81,12 @@ def delete_entry(entry_id):
     c.execute(f'delete from entries where entry_id == ?', (entry_id))
     db.commit()
 
+## (edited)
 def get_entry(entry_id):
     """Returns a list based on the entry id with values of the id, text, title, and assosciated user id"""
     c = db.cursor()
-    result = list(c.execute(f'select entry_id, entry_text, title, user_id from entries where entry_id == ?', (entry_id, )))
+
+    result = list(c.execute(f'select ID, Text, Title, UserID from Entries where ID == ?', (entry_id, )))
     if(len(result) == 0): #if there is no entry with the id 
         return None
     return [{

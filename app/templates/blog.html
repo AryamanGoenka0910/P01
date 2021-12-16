@@ -10,7 +10,7 @@
       <a href="/"><p>Return to Homepage</p></a>
       <h1>{{ username }}'s Blog</h1>
       {% if lookingAtOwnBlog %}
-      <a href="/blog/newBlogEntry" style="color: green"><p>Create a New Post</p></a>
+      <a href="/blog/{{ user_id }}/newBlogEntry" style="color: green"><p>Create a New Post</p></a>
       {% endif %}
       <hr />
       <h2>{{ username }}'s Posts:</h2>

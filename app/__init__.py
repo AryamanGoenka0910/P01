@@ -92,7 +92,6 @@ def register():
             session['username'] = new_username
             return redirect(url_for('landing'))
 
-
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
 
@@ -143,24 +142,31 @@ def display_entry(entry_id):
 @app.route('/blog/newBlogEntry', methods=['GET', 'POST'])
 def create_new_entry():
     """Allows the user to create a new blog entry"""
-    try:
-        if(session.get("user_id") == None):
-            return redirect("/") #if a non-logged in user gets here, redirect them to the login page
-        if(request.method == 'POST'):
-            user_id = session.get("user_id")
-            new_entry_text = request.form.get('entry_text')
-            new_title = request.form.get('title')
-            if(new_title != ''): #can't have blank title
-                db_builder.add_entry(new_title, new_entry_text, user_id) #see add_entry in database.py
-            else:
-                return redirect('/blog/newBlogEntry')
+    if not logged_in():
+        # If not logged in, redirect to the main page
+        return redirect(url_for('landing'))
+    
+    if request.method == 'GET':
+        return render_template("newBlogEntry.html", user_id=db_builder.get_id_from_username(session.get('username')))
 
-            #This assumes that the entry_id of the one we just added to the database, is the user's most recent entry
-            assumed_entry_id = db_builder.getMostRecentEntry(user_id)["entry_id"]
-            return redirect(f"/entry/{assumed_entry_id}")
-        return render_template("newBlogEntry.html", user_id=session.get("user_id"))
-    except Exception:
-        return "Something went wrong on our end. Please try again later."
+    if request.method == 'POST':
+        user_id = db_builder.get_id_from_username(session.get('username'))
+        new_entry_text = request.form.get('entry_text')
+        new_title = request.form.get('title')
+        
+        if(new_title != ''): #can't have blank title
+            db_builder.add_entry(new_title, new_entry_text, user_id) #see add_entry in database.py
+        
+        else:
+            return redirect('/blog/newBlogEntry')
+
+        #This assumes that the entry_id of the one we just added to the database, is the user's most recent entry
+        #assumed_entry_id = db_builder.getMostRecentEntry(user_id)["entry_id"]
+        #return redirect(f"/entry/{assumed_entry_id}")
+        return redirect(f"/blog/{user_id}")
+    
+    
+    
 
 @app.route('/entry/<int:entry_id>/edit', methods=['GET', 'POST'])
 def display_entry_edit(entry_id):

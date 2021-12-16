@@ -61,11 +61,13 @@ def login(username, password):
     else:
         return True
 
+## (edited)
 def add_entry(title, entry_text, user_id):
     """Adds an entry into the entries table, stores the text, title, and the user id of the associated account"""
     c = db.cursor()
-    c.execute(f'INSERT INTO entries (title, entry_text, user_id) VALUES (?, ?, ?)', (title, entry_text, user_id))
+    c.execute('INSERT INTO Entries VALUES (null, ?, ?, ?)', (title, entry_text, user_id))
     db.commit() 
+    ##db.close()
 
 def edit_entry(entry_id, entry_text, title):
     """Updates the text and title of an entry, entry id is not altered"""

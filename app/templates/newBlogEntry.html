@@ -13,7 +13,7 @@
     <div class="centerFillFlex">
       <a href="/"><p>Return to Homepage</p></a>
       <h3>Create a Post:</h3>
-      <form action="/blog/newBlogEntry" method="post">
+      <form action="/blog/{{ user_id }}/newBlogEntry" method="post">
         <p>Post Title:</p>
         <textarea name="title" cols="100"></textarea>
         <br />

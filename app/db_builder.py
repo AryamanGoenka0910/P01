@@ -25,7 +25,6 @@ def dbsetup():
     # run SQL statement
 
     db.commit() #save changes
-    db.close()  #close database
 
 # User Personal Info Table:
     ## preferredCuisines, and intolerances are lists. Diet is a single string.
@@ -82,7 +81,6 @@ def signup(username, password):
         c.execute('INSERT INTO Users VALUES (null, ?, ?)', (username, password))
 
         db.commit()
-        db.close()
         # Uses empty quotes since it will return false when checked as a boolean
         return  ""
 
@@ -103,13 +101,13 @@ def login(username, password):
 def edit_entry(entry_id, entry_text, title):
     """Updates the text and title of an entry, entry id is not altered"""
     c = db.cursor()
-    c.execute(f'UPDATE entries SET entry_text = ?, title = ? where entry_id == ?', (entry_text, title, entry_id))
+    c.execute(f'UPDATE Entries SET Text = ?, Title = ? where ID == ?', (entry_text, title, entry_id))
     db.commit()
 
 def delete_entry(entry_id):
     """Removes an entry from the table based on the entry id"""
     c = db.cursor()
-    c.execute(f'delete from entries where entry_id == ?', (entry_id))
+    c.execute(f'DELETE FROM Entries where ID == ?', (entry_id))
     db.commit()
 
 def get_id_from_username(username):
@@ -142,13 +140,12 @@ def add_entry(title, entry_text, user_id):
     #          [get_id_from_username(username), json.dumps([]), "", json.dumps([]), "", ""])
     db.commit()
 
-
 ## (edited)
 def get_entry(entry_id):
     """Returns a list based on the entry id with values of the id, text, title, and assosciated user id"""
     c = db.cursor()
 
-    result = list(c.execute(f'select ID, Text, Title, UserID from Entries where ID == ?', (entry_id)))
+    result = list(c.execute(f'select ID, Text, Title, UserID from Entries where ID == ?', (entry_id, )))
     if(len(result) == 0): #if there is no entry with the id 
         return None
     return [{
@@ -170,21 +167,10 @@ def get_entries_of_user(user_id, offset, limit):
         "user_id": user_id
     } for (entry_id, entry_text, title, user_id) in result] #all the entries of a user
 
-def getMostRecentEntry(user_id):
-    """Returns the users most recent entry by ordering all of their entries in id order, with the entry of the largest id at the top"""
-    c = db.cursor()
-    result = list(c.execute(f'select entry_id, entry_text, title, user_id from entries where user_id == ? order by entry_id DESC limit 1', (user_id, )))
-    return [{
-        "entry_id": entry_id,
-        "entry_text": entry_text,
-        "title": title,
-        "user_id": user_id
-    } for (entry_id, entry_text, title, user_id) in result][0] #returning first entry in reordered list
-
 def get_random_users():
     """Returns either 10 random users or all users to display as recommended blogs on the homepage"""
     c = db.cursor()
-    rows = list(c.execute('SELECT COUNT(*) FROM users'))[0][0] #length of users table
+    rows = list(c.execute('SELECT COUNT(*) FROM Users'))[0][0] #length of users table
     population_count = 10 if rows >= 10 else rows
     user_ids = random.sample(range(1,rows+1), population_count) #takes 10 distinct random users
     usernames = [get_username_from_id(user_id) for user_id in user_ids]
@@ -195,6 +181,3 @@ def get_random_users():
         } 
     for (username, user_id) in zip(usernames, user_ids)]
   
-  
-
-

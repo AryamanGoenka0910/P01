@@ -16,7 +16,7 @@
       <h2>{{ username }}'s Posts:</h2>
       {% for entry in entries %}
       <h2>
-        <a href="/entry/{{entry['entry_id']}}">{{ entry['title'] }}</a>
+        <a href="/blog/entry/{{entry['entry_id']}}">{{ entry['title'] }}</a>
       </h2>
       <p>{{entry['entry_text'][0:200] + "..."}}</p>
       {% if lookingAtOwnBlog %}

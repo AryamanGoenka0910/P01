@@ -35,6 +35,10 @@ haotianG -- 2020-16-12 1:00
 - Worked on home page
 - Going to setup user profiles soon
 
+-aryamanG -- 2020-16-12 18:00
+- Fixed editing and deleting post functions
+
+
 
 
 

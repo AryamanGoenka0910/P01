@@ -211,7 +211,10 @@ def delete():
 
 @app.route('/restaurants', methods=['GET', 'POST'])
 def restaurant():
-    return render_template('restaurants.html')
+    if logged_in():
+        return render_template('restaurants.html', logged_in=True)
+    else:
+        return render_template('restaurants.html', logged_in=False)
 
 if __name__ == '__main__':
     app.debug = True

@@ -23,6 +23,10 @@ def dbsetup():
     command = "CREATE TABLE Users (ID INTEGER PRIMARY KEY AUTOINCREMENT, Username TEXT, Password TEXT)"
     c.execute(command)      # test SQL stmt in sqlite3 shell, save as string
     # run SQL statement
+    
+    c.execute("DROP TABLE IF EXISTS Users")
+    command = "CREATE TABLE IF NOT EXISTS User_Info (ID INTEGER NOT NULL, PreferredCuisines TEXT DEFAULT '[]', Diet TEXT DEFAULT '', Intolerances TEXT DEFAULT '[]', Bio TEXT DEFAULT '')"
+    c.execute(command) 
 
     db.commit() #save changes
 

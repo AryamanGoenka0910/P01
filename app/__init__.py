@@ -8,6 +8,9 @@ import re
 import sqlite3
 import db_builder
 from flask import Flask, render_template, request, session, redirect, url_for
+import urllib3
+import json
+import requests
 
 app = Flask(__name__)
 app.secret_key = 'Mango'
@@ -211,10 +214,16 @@ def delete():
 
 @app.route('/restaurants', methods=['GET', 'POST'])
 def restaurant():
-    if logged_in():
-        return render_template('restaurants.html', logged_in=True)
-    else:
-        return render_template('restaurants.html', logged_in=False)
+    #if logged_in():
+    #    return render_template('restaurants.html', logged_in=True)
+    #else:
+    #    return render_template('restaurants.html', logged_in=False)
+
+    #http = urllib3.PoolManager()
+    my_headers = {'Authorization' : 'Bearer gJIaQ2GgBZJRE1iV61MUNNMIw8v_Q4x1aAKYFnq6TZrNQHsCwi1b8bpuDZ_MmWUk9paI5MDAYFtfkcrE_HCZZMQhf4L1yc0heQ4coxKhhELU7Cqdy2XUsAaik0C7YXYx'}
+    r = requests.get('https://api.yelp.com/v3/businesses/search?term=delis&latitude=37.786882&longitude=-122.399972', headers=my_headers)
+    print(r.json())
+    return render_template('restaurants.html', data=r.json()['businesses'])
 
 if __name__ == '__main__':
     app.debug = True

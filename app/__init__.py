@@ -10,6 +10,7 @@ import db_builder
 from flask import Flask, render_template, request, session, redirect, url_for
 import json
 import requests
+import random
 
 app = Flask(__name__)
 app.secret_key = 'Mango'
@@ -213,27 +214,59 @@ def delete():
 
 @app.route('/restaurants', methods=['GET', 'POST'])
 def restaurant():
-    #if logged_in():
-    #    return render_template('restaurants.html', logged_in=True)
-    #else:
-    #    return render_template('restaurants.html', logged_in=False)
+    login = False
+    if logged_in():
+        login = True
+    else:
+        login = False
+
+    random_cats = ['pizza', 'indpak', 'japanese', 'chinese', 'vegan', 'restuarants']
+    x = random.randrange(0,5)
+
     my_headers = {'Authorization' : 'Bearer gJIaQ2GgBZJRE1iV61MUNNMIw8v_Q4x1aAKYFnq6TZrNQHsCwi1b8bpuDZ_MmWUk9paI5MDAYFtfkcrE_HCZZMQhf4L1yc0heQ4coxKhhELU7Cqdy2XUsAaik0C7YXYx'}
-    r = requests.get('https://api.yelp.com/v3/businesses/search?location=NYC&categories=restuarants', headers=my_headers)
+    r = requests.get(f'https://api.yelp.com/v3/businesses/search?location=NYC&categories={random_cats[x]}', headers=my_headers)
     print(r.json())
-    return render_template('restaurants.html', data=r.json()['businesses'])
+    return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login)
 
 @app.route('/restaurants/search', methods=['GET', 'POST'])
 def restaurants_search():
+    login = False
+    if logged_in():
+        login = True
+    else:
+        login = False
+    
     method = request.method
     if method == 'GET':
         s = request.args['search']
+    
     if method == 'POST':
         s = request.form['search']
+        
     s = s.lower()
     my_headers = {'Authorization' : 'Bearer gJIaQ2GgBZJRE1iV61MUNNMIw8v_Q4x1aAKYFnq6TZrNQHsCwi1b8bpuDZ_MmWUk9paI5MDAYFtfkcrE_HCZZMQhf4L1yc0heQ4coxKhhELU7Cqdy2XUsAaik0C7YXYx'}
-    r = requests.get(f"https://api.yelp.com/v3/businesses/search?location=NYC&categories=restuarants,{s}", headers=my_headers)
-    print(r.json())
-    return render_template('restaurants.html', data=r.json()['businesses'])
+    r = requests.get(f"https://api.yelp.com/v3/businesses/search?location=NYC&categories=restuarants&term={s}", headers=my_headers)
+    
+    return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login)
+
+@app.route('/restaurants/autocomplete', methods=['GET', 'POST'])
+def restaurants_autocomplete():
+    login = False
+    if logged_in():
+        login = True
+    else:
+        login = False
+    
+    method = request.method
+    if method == 'GET':
+        return render_template('autocomplete.html', logged_in=login)    
+    if method == 'POST':
+        s = request.form['search']
+        
+    s = s.lower()
+    my_headers = {'Authorization' : 'Bearer gJIaQ2GgBZJRE1iV61MUNNMIw8v_Q4x1aAKYFnq6TZrNQHsCwi1b8bpuDZ_MmWUk9paI5MDAYFtfkcrE_HCZZMQhf4L1yc0heQ4coxKhhELU7Cqdy2XUsAaik0C7YXYx'}
+    r = requests.get(f"https://api.yelp.com/v3/autocomplete?text={s}&latitude=37.786882&longitude=-122.39997", headers=my_headers)
+    return render_template('autocomplete.html', data=r.json()['businesses'], logged_in=login)
 
 if __name__ == '__main__':
     app.debug = True

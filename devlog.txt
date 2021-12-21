@@ -38,6 +38,14 @@ haotianG -- 2020-16-12 1:00
 -aryamanG -- 2020-16-12 18:00
 - Fixed editing and deleting post functions
 
+-aryamanG -- 2020-19-12 12:00
+- Search Result Cards
+
+-aryamanG -- 2020-20-12 22:00
+- Yelp API calls
+- Find restaurants based off input text
+- autocomplete search results based of input text
+
 
 
 

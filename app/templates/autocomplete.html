@@ -24,11 +24,10 @@
 <body>
     <br><br>
     <div class="mx-auto" style="width: 800px;">
-        <form action="/restaurants/search" method="post" class="d-flex">
+        <form action="/restaurants/autocomplete" method="post" class="d-flex">
             <input class="form-control me-2" type="search" name="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-success" type="submit">Search</button>
         </form>
-        <a class="btn btn-primary" href="/restaurants/autocomplete" role="button">Can't Find What You're Looking For? Autocomplete!</a>
     </div>
 
     <br><br>
@@ -37,22 +36,9 @@
         {% for res in data %}
         <div class="col sm-6">
           <div class="card m-3">
-            <img class="card-img-top" src={{res['image_url']}} alt="Card image cap">
+            <img class="card-img-top" alt="Card image cap">
             <div class="card-body">
                 <h5 class="card-title">{{res['name']}}</h5>
-                <h6>Rating: {{res['rating']}}</h6>
-                <p>
-                  {% for i in res['location']['display_address'] %}
-                  {{i}}
-                  {% endfor %}
-                  <br>
-                  {{res['display_phone']}}
-                </p>
-                <h6>Cuisines:</h6>
-                <ul class="list-group list-group-flush">
-                  {% for i in res["categories"] %}
-                  <li class="list-group-item">{{i['title']}}</li>
-                  {% endfor %}
                 </ul>
                 <a href="#" class="btn btn-primary">Go somewhere</a>
             </div>
@@ -61,7 +47,6 @@
         {% endfor %}
       </div>
     </div>
-    
 </body>
 
 

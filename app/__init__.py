@@ -6,6 +6,7 @@ P00: ArRESTed Development
 '''
 import re
 import sqlite3
+from recipes import searchRecipes
 import db_builder
 from flask import Flask, render_template, request, session, redirect, url_for
 import json
@@ -267,6 +268,15 @@ def restaurants_autocomplete():
     my_headers = {'Authorization' : 'Bearer gJIaQ2GgBZJRE1iV61MUNNMIw8v_Q4x1aAKYFnq6TZrNQHsCwi1b8bpuDZ_MmWUk9paI5MDAYFtfkcrE_HCZZMQhf4L1yc0heQ4coxKhhELU7Cqdy2XUsAaik0C7YXYx'}
     r = requests.get(f"https://api.yelp.com/v3/autocomplete?text={s}&latitude=37.786882&longitude=-122.39997", headers=my_headers)
     return render_template('autocomplete.html', data=r.json()['businesses'], logged_in=login)
+
+@app.route('/recipes/search', methods=['GET', 'POST'])
+def recipes():
+    if(request.method == 'GET'):
+        return render_template('recipes.html', logged_in=logged_in())
+    if(request.method == 'POST'):
+        query = request.form.get("search")
+        return render_template('recipes.html', logged_in=logged_in(), recipes=searchRecipes(query))
+
 
 if __name__ == '__main__':
     app.debug = True

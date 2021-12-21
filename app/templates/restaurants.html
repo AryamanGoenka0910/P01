@@ -24,8 +24,8 @@
 <body>
     <br><br>
     <div class="mx-auto" style="width: 800px;">
-        <form class="d-flex">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <form action="/restaurants/search" class="d-flex">
+            <input class="form-control me-2" type="search" name="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-success" type="submit">Search</button>
         </form>
     </div>
@@ -36,16 +36,26 @@
         {% for res in data %}
         <div class="col sm-6">
           <div class="card m-3">
+            <img class="card-img-top" src={{res['image_url']}} alt="Card image cap">
             <div class="card-body">
-              <div class="card-body">
-                <h5 class="card-title">{{res["name"]}}</h5>
+              <!-- <div class="card-body"> -->
+                <h5 class="card-title">{{res['name']}}</h5>
+                <h6>Rating: {{res['rating']}}</h6>
+                <p>
+                  {% for i in res['location']['display_address'] %}
+                  {{i}}
+                  {% endfor %}
+                  <br>
+                  {{res['display_phone']}}
+                </p>
+                <h6>Cuisines:</h6>
                 <ul class="list-group list-group-flush">
                   {% for i in res["categories"] %}
                   <li class="list-group-item">{{i['title']}}</li>
                   {% endfor %}
                 </ul>
                 <a href="#" class="btn btn-primary">Go somewhere</a>
-              </div>
+              <!-- </div> -->
             </div>
           </div>
         </div>

@@ -26,8 +26,14 @@ aryamanG -- 2021-13-12 8:00
 aryamanG -- 2021-13-12 8:00
 - post functionality and basic routing to allow users to view and create posts
 
+sadidE -- 2021-13-12 8:40
+- Made search bar for the restaurant search feature
+
 aryamanG -- 2020-13-12 18:00
 - refactoring routing to stop non-loged in site visitors from accessing blog information
+
+sadidE -- 2021-16-12 8:40
+- Made nav bar and added it to every page
 
 haotianG -- 2020-16-12 1:00
 - Updated function for setting up the database
@@ -45,10 +51,19 @@ haotianG -- 2020-16-12 1:00
 - Recipe Cards
 - Spoonacular API working
 
+sadidE -- 2021-19-12 8:40
+- Made restaurant search feature using the yelp API
+- Users can search using a cuisine
+- It displays restaurants in NYC before the user searches anything
+
 -aryamanG -- 2020-20-12 22:00
 - Yelp API calls
 - Find restaurants based off input text
 - autocomplete search results based of input text
+
+sadidE -- 2021-22-12 8:40
+- Made a dropdown form for the cuisine search
+- User can now unput their location when searching
 
 
 

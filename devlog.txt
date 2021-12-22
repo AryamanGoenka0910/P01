@@ -41,6 +41,10 @@ haotianG -- 2020-16-12 1:00
 -aryamanG -- 2020-19-12 12:00
 - Search Result Cards
 
+-haotianG -- 2020-19-12 13:00
+- Recipe Cards
+- Spoonacular API working
+
 -aryamanG -- 2020-20-12 22:00
 - Yelp API calls
 - Find restaurants based off input text

@@ -250,25 +250,6 @@ def restaurants_search():
     
     return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login)
 
-@app.route('/restaurants/autocomplete', methods=['GET', 'POST'])
-def restaurants_autocomplete():
-    login = False
-    if logged_in():
-        login = True
-    else:
-        login = False
-    
-    method = request.method
-    if method == 'GET':
-        return render_template('autocomplete.html', logged_in=login)    
-    if method == 'POST':
-        s = request.form['search']
-        
-    s = s.lower()
-    my_headers = {'Authorization' : 'Bearer gJIaQ2GgBZJRE1iV61MUNNMIw8v_Q4x1aAKYFnq6TZrNQHsCwi1b8bpuDZ_MmWUk9paI5MDAYFtfkcrE_HCZZMQhf4L1yc0heQ4coxKhhELU7Cqdy2XUsAaik0C7YXYx'}
-    r = requests.get(f"https://api.yelp.com/v3/autocomplete?text={s}&latitude=37.786882&longitude=-122.39997", headers=my_headers)
-    return render_template('autocomplete.html', data=r.json()['businesses'], logged_in=login)
-
 @app.route('/recipes/search', methods=['GET', 'POST'])
 def recipes():
     if(request.method == 'GET'):

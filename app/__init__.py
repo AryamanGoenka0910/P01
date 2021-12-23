@@ -244,12 +244,21 @@ def restaurants_search():
     if method == 'POST':
         s = request.form['location']
         c = request.form['cuisine']
+   
     s = s.lower()
-    c = c.lower()
+    
+    if c == "All":
+        c = 'restaurants'
+    else:
+        c = c.lower()
     my_headers = {'Authorization' : 'Bearer gJIaQ2GgBZJRE1iV61MUNNMIw8v_Q4x1aAKYFnq6TZrNQHsCwi1b8bpuDZ_MmWUk9paI5MDAYFtfkcrE_HCZZMQhf4L1yc0heQ4coxKhhELU7Cqdy2XUsAaik0C7YXYx'}
     # r = requests.get(f"https://api.yelp.com/v3/businesses/search?location=NYC&categories=restuarants&term={s}", headers=my_headers)
     r = requests.get(f"https://api.yelp.com/v3/businesses/search?location={s}&categories={c}", headers=my_headers)
-    return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login) 
+    if s != "":
+        return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login) 
+    else:
+        r = requests.get("https://api.yelp.com/v3/businesses/search?location=NYC&categories=restaurants", headers=my_headers)
+        return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login) 
 
 @app.route('/restaurants/view', methods=['GET', 'POST'])
 def restaurants_view():

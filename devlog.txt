@@ -65,6 +65,11 @@ sadidE -- 2021-22-12 8:40
 - Made a dropdown form for the cuisine search
 - User can now unput their location when searching
 
+haotianG -- 2022-02-01 4:30
+- CRUD for comments, posts, and favorite recipes/posts
+- Saving/favoriting recipe functionality
+- Breaking changes to the database: I'm currently working on getting profiles set up. Don't worry! 
+
 
 
 

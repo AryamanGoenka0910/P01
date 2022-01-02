@@ -13,27 +13,12 @@
     />
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        {% if logged_in %}
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active"><a class="nav-link" href="/">Home</a></li>
           <li class="nav-item active">
             <a class="nav-link" href="/restaurants">Restaurants</a>
           </li>
         </ul>
-        {% else %}
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active"><a class="nav-link" href="/">Home</a></li>
-          <li class="nav-item active">
-            <a class="nav-link" href="/login">Login</a>
-          </li>
-          <li class="nav-item active">
-            <a class="nav-link" href="/register">Register</a>
-          </li>
-          <li class="nav-item active">
-            <a class="nav-link" href="/restaurants">Restaurants</a>
-          </li>
-        </ul>
-        {% endif %}
       </div>
     </nav>
   </head>
@@ -74,7 +59,90 @@
             </ul>
             <div class="card-body">
               <a href="#" class="card-link">View</a>
-              <a href="#" class="card-link">Bookmark</a>
+
+              <div id="element{{recipe['id']}}">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-heart"
+                  id="emptyHeart{{recipe['id']}}"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"
+                  ></path>
+                </svg>
+
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-heart-fill"
+                  id="filledHeart{{recipe['id']}}"
+                  style="display: none"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"
+                  ></path>
+                </svg>
+              </div>
+
+              <script>
+                (function () {
+                  let filledHeart = document.getElementById(
+                    "filledHeart" + "{{recipe['id']}}"
+                  );
+                  let emptyHeart = document.getElementById(
+                    "emptyHeart" + "{{recipe['id']}}"
+                  );
+                  let element = document.getElementById(
+                    "element" + "{{recipe['id']}}"
+                  );
+                  async function postData(url = "", data = {}) {
+                    // Default options are marked with *
+                    const response = await fetch(url, {
+                      method: "POST", // *GET, POST, PUT, DELETE, etc.
+                      mode: "cors", // no-cors, *cors, same-origin
+                      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+                      credentials: "same-origin", // include, *same-origin, omit
+                      headers: {
+                        "Content-Type": "application/json",
+                        // 'Content-Type': 'application/x-www-form-urlencoded',
+                      },
+                      redirect: "follow", // manual, *follow, error
+                      referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+                      body: JSON.stringify(data), // body data type must match "Content-Type" header
+                    });
+                    return response.json(); // parses JSON response into native JavaScript objects
+                  }
+
+                  dataToPost = {
+                    user_id: "{{user_id}}",
+                    recipe_id: "{{recipe['id']}}",
+                  };
+                  element.onclick = () => {
+                    postData("/api/is_recipe_favorited", dataToPost).then(
+                      (json) => {
+                        console.log(json);
+                        if (json.favorited == false) {
+                          filledHeart.style.display = "block";
+                          emptyHeart.style.display = "none";
+                          return postData("/api/favorite_recipe", dataToPost);
+                        } else {
+                          filledHeart.style.display = "none";
+                          emptyHeart.style.display = "block";
+                          return postData("/api/unfavorite_recipe", dataToPost);
+                        }
+                      }
+                    );
+                  };
+                })();
+              </script>
             </div>
           </div>
         </div>

@@ -8,5 +8,10 @@ def searchRecipes(query):
   print(r.json()['results'])
   return r.json()['results']
 
+def getRecipeInformation(recipe_id):
+  r = requests.get(f"https://api.spoonacular.com/recipes/{recipe_id}/information", 
+  params={'id': recipe_id, 'apiKey': apiKey})
+  
+  return r.json()
 
-searchRecipes("Apple pie")
+

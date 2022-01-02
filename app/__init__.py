@@ -6,12 +6,12 @@ P00: ArRESTed Development
 '''
 import re
 import sqlite3
-from recipes import searchRecipes
 import db_builder
 from flask import Flask, render_template, request, session, redirect, url_for
 import json
 import requests
 import random
+import recipes
 
 app = Flask(__name__)
 app.secret_key = 'Mango'
@@ -109,6 +109,67 @@ def logout():
 
 ####BLOG FUNCTIONS#####
 #######################
+
+@app.route('/user/<string:username>', methods=['GET'])
+def display_user_posts(username):
+    if not logged_in:
+        return redirect(url_for('landing'))
+    user_id = db_builder.get_id_from_username(username)
+    templateArgs = {
+        "posts" : db_builder.get_posts(user_id, 0, 50),
+        "username": username,
+        "user_id": user_id,
+        "lookingAtOwnBlog": session.get('username') == username
+    }
+
+
+
+@app.route('/user/<string:username>/saved_recipes', methods=['GET'])
+def display_user_favoriteRecipes(username):
+    if not logged_in:
+        return redirect(url_for('landing'))
+    user_id = db_builder.get_id_from_username(username)
+    templateArgs = {
+        "favorite_recipes" : db_builder.get_favorite_recipes(user_id, 0, 50),
+        "username": username,
+        "user_id": user_id,
+        "lookingAtOwnBlog": session.get('username') == username
+    }
+
+@app.route('/api/is_recipe_favorited', methods=['POST'])
+def is_recipe_favorited():
+    user_id = request.json['user_id']
+    recipe_id = request.json['recipe_id']
+    return {
+        'favorited': db_builder.is_recipe_favorited(user_id, recipe_id)
+    }
+
+@app.route('/api/is_post_favorited', methods=['POST'])
+def is_post_favorited():
+    print(request.data)
+    user_id = request.json['user_id']
+    post_id = request.json['post_id']
+    return {
+        'favorited': db_builder.is_post_favorited(user_id, post_id)
+    }
+
+@app.route('/api/favorite_recipe', methods=['POST'])
+def favorite_recipe():
+    print(request.data)
+    user_id = request.json['user_id']
+    recipe_id = request.json['recipe_id']
+    db_builder.favorite_recipe(user_id, recipe_id, recipes.getRecipeInformation(recipe_id))
+    return {"message": "Successfully favorited recipe"}
+    
+
+@app.route('/api/unfavorite_recipe', methods=['POST'])
+def unfavorite_recipe():
+    print(request.data)
+    user_id = request.json['user_id']
+    recipe_id = request.json['recipe_id']
+    db_builder.unfavorite_recipe(user_id, recipe_id)
+    return {"message": "Successfully unfavorited recipe"}
+
 
 @app.route('/blog/<int:user_id>', methods=['GET', 'POST'])
 def display_user_blog(user_id):
@@ -269,12 +330,15 @@ def restaurants_view():
     return render_template('view_restaurant.html', res=r.json())
 
 @app.route('/recipes/search', methods=['GET', 'POST'])
-def recipes():
+def recipes_search():
+    if not logged_in():
+        redirect(url_for("landing"))
+    user_id = db_builder.get_id_from_username(session.get("username"))
     if(request.method == 'GET'):
         return render_template('recipes.html', logged_in=logged_in())
     if(request.method == 'POST'):
         query = request.form.get("search")
-        return render_template('recipes.html', logged_in=logged_in(), recipes=searchRecipes(query))
+        return render_template('recipes.html', logged_in=logged_in(), recipes=recipes.searchRecipes(query), user_id=user_id)
 
 
 if __name__ == '__main__':

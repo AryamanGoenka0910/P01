@@ -121,21 +121,24 @@
                     return response.json(); // parses JSON response into native JavaScript objects
                   }
 
-                  dataToPost = {
+                  let dataToPost = {
                     user_id: "{{user_id}}",
                     recipe_id: "{{recipe['id']}}",
                   };
                   element.onclick = () => {
+                    console.log(dataToPost);
                     postData("/api/is_recipe_favorited", dataToPost).then(
                       (json) => {
                         console.log(json);
                         if (json.favorited == false) {
                           filledHeart.style.display = "block";
                           emptyHeart.style.display = "none";
+                          console.log(dataToPost);
                           return postData("/api/favorite_recipe", dataToPost);
                         } else {
                           filledHeart.style.display = "none";
                           emptyHeart.style.display = "block";
+                          console.log(dataToPost);
                           return postData("/api/unfavorite_recipe", dataToPost);
                         }
                       }

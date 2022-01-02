@@ -146,7 +146,7 @@ def is_recipe_favorited():
 
 @app.route('/api/is_post_favorited', methods=['POST'])
 def is_post_favorited():
-    print(request.data)
+    print(request.json)
     user_id = request.json['user_id']
     post_id = request.json['post_id']
     return {

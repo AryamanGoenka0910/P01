@@ -414,7 +414,7 @@
                       <!-- Post Picture -->
                       <img
                         src="{{post['image_link']}}"
-                        style="max-height: 75vh; max-width: 60vw"
+                        style="max-height: 75vh; width: auto; height: 75vh; max-width: 65vw;"
                       />
                       <!-- Comment Section -->
                       <main style="display: flex; flex-direction: column;">
@@ -508,7 +508,7 @@
                                 ">
                                 <a href="/user/{{db_builder.get_username_from_id(comment['user_id'])}}/user_posts" 
                                   style="text-decoration: none; 
-                                        color: black;"><b>{{username}}</b></a> 
+                                        color: black;"><b>{{db_builder.get_username_from_id(comment['user_id'])}}</b></a> 
                                 <span>{{comment["comment"]}}</span>
                                 </div>
                               {% if lookingAtOwnBlog %}

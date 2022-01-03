@@ -374,122 +374,94 @@
         </div>
       </div>
       {% endif %}
-      <div>
-        <div class="row g-5">
-          {% for post in user_posts %}
-          <div class="col-4">
-            <div
-              data-bs-toggle="modal"
-              data-bs-target="#postModal{{post['post_id']}}"
-              style="
-                width: 293px;
-                height: 293px;
-                overflow: hidden;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                background-color: grey;
-                cursor: pointer;
-              "
-            >
-              <img style="height: 293px" src="{{post['image_link']}}" />
-            </div>
-            <!-- Modal -->
-            <div
-              class="modal fade"
-              id="postModal{{post['post_id']}}"
-              tabindex="-1"
-              role="dialog"
-              aria-labelledby="exampleModalCenterTitle"
-              aria-hidden="true"
-            >
+        <div>
+          <div class="row g-5">
+            {% for post in user_posts %}
+            <div class="col-4">
               <div
-                class="modal-dialog modal-dialog-centered"
-                role="document"
-                style="justify-content: center"
+                data-bs-toggle="modal"
+                data-bs-target="#postModal{{post['post_id']}}"
+                style="
+                  width: 293px;
+                  height: 293px;
+                  overflow: hidden;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  background-color: grey;
+                  cursor: pointer;
+                "
               >
-                <div class="modal-content" style="display: table">
-                  <div class="modal-body p-0">
-                    <div style="display: flex">
-                      <!-- Post Picture -->
-                      <img
-                        src="{{post['image_link']}}"
-                        style="max-height: 75vh; width: auto; height: 75vh; max-width: 65vw;"
-                      />
-                      <!-- Comment Section -->
-                      <main style="display: flex; flex-direction: column;">
-                        <section class="p-3" style="overflow-y: scroll; height: 55vh;">
-                          <div
-                            style="
-                              display: flex;
-                              align-items: center;
-                              width: 25vw;
-                            "
-                          >
-                            <img
-                              src="{{user_personal_info['profile_picture']}}"
-                              style="border-radius: 9999px"
-                              width="38px"
-                              height="38px"
-                            />
-                            <a
-                              href="/user/{{username}}/user_posts"
+                <img style="height: 293px" src="{{post['image_link']}}" />
+              </div>
+              <!-- Modal -->
+              <div
+                class="modal fade"
+                id="postModal{{post['post_id']}}"
+                tabindex="-1"
+                role="dialog"
+                aria-labelledby="exampleModalCenterTitle"
+                aria-hidden="true"
+              >
+                <div
+                  class="modal-dialog modal-dialog-centered"
+                  role="document"
+                  style="justify-content: center"
+                >
+                  <div class="modal-content" style="display: table">
+                    <div class="modal-body p-0">
+                      <div style="display: flex">
+                        <!-- Post Picture -->
+                        <img
+                          src="{{post['image_link']}}"
+                          style="max-height: 75vh; width: auto; height: 75vh; max-width: 65vw;"
+                        />
+                        <!-- Comment Section -->
+                        <main style="display: flex; flex-direction: column;">
+                          <section class="p-3" style="overflow-y: scroll; height: 55vh;">
+                            <div
                               style="
-                                margin-left: 1rem;
-                                cursor: pointer;
-                                text-decoration: none;
-                                color: black;
-                              "><b>{{username}}</b></a>
-                            <form method="post" action="/api/delete_post" style="margin-left: auto;">
-                              <input
-                                type="text"
-                                name="post_id"
-                                value="{{post['post_id']}}"
-                                style="display: none"
-                              />
-                              <input
-                                type="submit"
-                                class="btn-danger rounded"
-                                style="margin-left: auto"
-                                value="Delete"
-                              >
-                                
-                              </input>
-                            </form>
-                          </div>
-                          <hr>
-                          {% if post['post_description'] %}
-                          <div style="display: flex;">
-                            <img
-                              src="{{user_personal_info['profile_picture']}}"
-                              style="border-radius: 9999px; align-self: center;"
-                              width="38px"
-                              height="38px"
-                              
-                            />
-                            
-                              <div style="
-                                
-                                margin-left: 1rem;
-                                cursor: pointer;
-                                text-decoration: none;
-                                color: black;
                                 display: flex;
-                                flex-direction: column;
-                              ">
-                              <a href="/user/{{username}}/user_posts" 
-                                style="text-decoration: none; 
-                                      color: black;"><b>{{username}}</b></a> 
-                              <span>{{post['post_description']}}</span>
-                              </div>
-                            
-                          </div>
-                          {% endif %}
-                          <main id="comment_container_{{post['post_id']}}">
-                            {% for comment in db_builder.get_comments(post['post_id'], 0, 50) %}
-                            <div style="display: flex; margin-top: 30px;" id="comment_id{{comment['comment_id']}}">
+                                align-items: center;
+                                width: 25vw;
+                              "
+                            >
                               <img
-                                src="{{db_builder.get_user_info(comment['user_id'])['profile_picture']}}"
+                                src="{{user_personal_info['profile_picture']}}"
+                                style="border-radius: 9999px"
+                                width="38px"
+                                height="38px"
+                              />
+                              <a
+                                href="/user/{{username}}/user_posts"
+                                style="
+                                  margin-left: 1rem;
+                                  cursor: pointer;
+                                  text-decoration: none;
+                                  color: black;
+                                "><b>{{username}}</b></a>
+                              <form method="post" action="/api/delete_post" style="margin-left: auto;">
+                                <input
+                                  type="text"
+                                  name="post_id"
+                                  value="{{post['post_id']}}"
+                                  style="display: none"
+                                />
+                                <input
+                                  type="submit"
+                                  class="btn-danger rounded"
+                                  style="margin-left: auto"
+                                  value="Delete"
+                                >
+                                  
+                                </input>
+                              </form>
+                            </div>
+                            <hr>
+                            {% if post['post_description'] %}
+                            <div style="display: flex;">
+                              <img
+                                src="{{user_personal_info['profile_picture']}}"
                                 style="border-radius: 9999px; align-self: center;"
                                 width="38px"
                                 height="38px"
@@ -504,109 +476,136 @@
                                   color: black;
                                   display: flex;
                                   flex-direction: column;
-                                  width: 80%;
                                 ">
-                                <a href="/user/{{db_builder.get_username_from_id(comment['user_id'])}}/user_posts" 
+                                <a href="/user/{{username}}/user_posts" 
                                   style="text-decoration: none; 
-                                        color: black;"><b>{{db_builder.get_username_from_id(comment['user_id'])}}</b></a> 
-                                <span>{{comment["comment"]}}</span>
+                                        color: black;"><b>{{username}}</b></a> 
+                                <span>{{post['post_description']}}</span>
                                 </div>
-                              {% if lookingAtOwnBlog %}
-                              <svg id="delete_comment_id{{comment['comment_id']}}" style="align-self: center; margin-left: auto;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                              </svg>
-
-                              {% elif comment['user_id'] == viewer_user_id %}
-                              <svg id="delete_comment_id{{comment['comment_id']}}" style="align-self: center; margin-left: auto;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                              </svg>
-                              {% else %}
-                              {% endif %}
                               
-                              <script>
-                                (function() {
-                                  let delete_comment = document.getElementById("delete_comment_id" + "{{comment['comment_id']}}")
-                                  let comment = document.getElementById("comment_id" + "{{comment['comment_id']}}")
-                                  async function postData(url = '', data = {}) {
-                                  // Default options are marked with *
-                                  const response = await fetch(url, {
-                                    method: 'POST', // *GET, POST, PUT, DELETE, etc.
-                                    mode: 'cors', // no-cors, *cors, same-origin
-                                    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-                                    credentials: 'same-origin', // include, *same-origin, omit
-                                    headers: {
-                                      'Content-Type': 'application/json'
-                                      // 'Content-Type': 'application/x-www-form-urlencoded',
-                                    },
-                                    redirect: 'follow', // manual, *follow, error
-                                    referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-                                    body: JSON.stringify(data) // body data type must match "Content-Type" header
-                                  });
-                                  return response.json(); // parses JSON response into native JavaScript objects
-                                  }
-                                  delete_comment.onclick = () => {
-                                    postData("/api/delete_comment", {comment_id: "{{comment['comment_id']}}"}).then(data => {
-                                      comment.remove()
-                                    })
-                                  }
-                                
-
-                                })()
-                              </script>
                             </div>
-                            {% endfor %}
-                          </main>
-                        </section>
-                        <section style="display: flex; align-items: center; height: 5vh; justify-content: space-evenly;">
-                          <textarea id="create_comment_{{post['post_id']}}" rows="1" placeholder="Add a comment" style="width: 80%; resize: none;"></textarea>
-                          <a id="post_comment_{{post['post_id']}}" style="text-decoration: none; padding: 2.5px 12.5px; cursor: pointer;" class="btn-primary rounded">Post</a>
-                        </section>
-                        <script>
-                          (function () {
-                            let comment_container = document.getElementById("comment_container_{{post['post_id']}}")
-                            let comment_box = document.getElementById("create_comment_" + "{{post['post_id']}}")
-                            let submit_button = document.getElementById("post_comment_" + "{{post['post_id']}}")
-                            async function postData(url = '', data = {}) {
-                            // Default options are marked with *
-                            const response = await fetch(url, {
-                              method: 'POST', // *GET, POST, PUT, DELETE, etc.
-                              mode: 'cors', // no-cors, *cors, same-origin
-                              cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-                              credentials: 'same-origin', // include, *same-origin, omit
-                              headers: {
-                                'Content-Type': 'application/json'
-                                // 'Content-Type': 'application/x-www-form-urlencoded',
-                              },
-                              redirect: 'follow', // manual, *follow, error
-                              referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-                              body: JSON.stringify(data) // body data type must match "Content-Type" header
-                            });
-                            return response.json(); // parses JSON response into native JavaScript objects
-                          }
-                          
+                            {% endif %}
+                            <main id="comment_container_{{post['post_id']}}">
+                              {% for comment in db_builder.get_comments(post['post_id'], 0, 50) %}
+                              <div style="display: flex; margin-top: 30px;" id="comment_id{{comment['comment_id']}}">
+                                <img
+                                  src="{{db_builder.get_user_info(comment['user_id'])['profile_picture']}}"
+                                  style="border-radius: 9999px; align-self: center;"
+                                  width="38px"
+                                  height="38px"
+                                  
+                                />
+                                
+                                  <div style="
+                                    
+                                    margin-left: 1rem;
+                                    cursor: pointer;
+                                    text-decoration: none;
+                                    color: black;
+                                    display: flex;
+                                    flex-direction: column;
+                                    width: 80%;
+                                  ">
+                                  <a href="/user/{{db_builder.get_username_from_id(comment['user_id'])}}/user_posts" 
+                                    style="text-decoration: none; 
+                                          color: black;"><b>{{db_builder.get_username_from_id(comment['user_id'])}}</b></a> 
+                                  <span>{{comment["comment"]}}</span>
+                                  </div>
+                                {% if lookingAtOwnBlog %}
+                                <svg id="delete_comment_id{{comment['comment_id']}}" style="align-self: center; margin-left: auto;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                  <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                  <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                                </svg>
 
-                          submit_button.onclick = () => {
-                            postData("/api/make_comment", {post_id: "{{post['post_id']}}", comment: comment_box.value}).then((data) => {
-                              window.location.href = window.location.pathname+"?"+$.param({'openModalOnLoad':"{{post['post_id']}}"})
-                            })
-                          }
-                          })();
-                        </script>
+                                {% elif comment['user_id'] == viewer_user_id %}
+                                <svg id="delete_comment_id{{comment['comment_id']}}" style="align-self: center; margin-left: auto;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                  <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                  <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                                </svg>
+                                {% else %}
+                                {% endif %}
+                                
+                                <script>
+                                  (function() {
+                                    let delete_comment = document.getElementById("delete_comment_id" + "{{comment['comment_id']}}")
+                                    let comment = document.getElementById("comment_id" + "{{comment['comment_id']}}")
+                                    async function postData(url = '', data = {}) {
+                                    // Default options are marked with *
+                                    const response = await fetch(url, {
+                                      method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                                      mode: 'cors', // no-cors, *cors, same-origin
+                                      cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                                      credentials: 'same-origin', // include, *same-origin, omit
+                                      headers: {
+                                        'Content-Type': 'application/json'
+                                        // 'Content-Type': 'application/x-www-form-urlencoded',
+                                      },
+                                      redirect: 'follow', // manual, *follow, error
+                                      referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+                                      body: JSON.stringify(data) // body data type must match "Content-Type" header
+                                    });
+                                    return response.json(); // parses JSON response into native JavaScript objects
+                                    }
+                                    delete_comment.onclick = () => {
+                                      postData("/api/delete_comment", {comment_id: "{{comment['comment_id']}}"}).then(data => {
+                                        comment.remove()
+                                      })
+                                    }
+                                  
+
+                                  })()
+                                </script>
+                              </div>
+                              {% endfor %}
+                            </main>
+                          </section>
+                          <section style="display: flex; align-items: center; height: 5vh; justify-content: space-evenly;">
+                            <textarea id="create_comment_{{post['post_id']}}" rows="1" placeholder="Add a comment" style="width: 80%; resize: none;"></textarea>
+                            <a id="post_comment_{{post['post_id']}}" style="text-decoration: none; padding: 2.5px 12.5px; cursor: pointer;" class="btn-primary rounded">Post</a>
+                          </section>
+                          <script>
+                            (function () {
+                              let comment_container = document.getElementById("comment_container_{{post['post_id']}}")
+                              let comment_box = document.getElementById("create_comment_" + "{{post['post_id']}}")
+                              let submit_button = document.getElementById("post_comment_" + "{{post['post_id']}}")
+                              async function postData(url = '', data = {}) {
+                              // Default options are marked with *
+                              const response = await fetch(url, {
+                                method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                                mode: 'cors', // no-cors, *cors, same-origin
+                                cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                                credentials: 'same-origin', // include, *same-origin, omit
+                                headers: {
+                                  'Content-Type': 'application/json'
+                                  // 'Content-Type': 'application/x-www-form-urlencoded',
+                                },
+                                redirect: 'follow', // manual, *follow, error
+                                referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+                                body: JSON.stringify(data) // body data type must match "Content-Type" header
+                              });
+                              return response.json(); // parses JSON response into native JavaScript objects
+                            }
+                            
+
+                            submit_button.onclick = () => {
+                              postData("/api/make_comment", {post_id: "{{post['post_id']}}", comment: comment_box.value}).then((data) => {
+                                window.location.href = window.location.pathname+"?"+$.param({'openModalOnLoad':"{{post['post_id']}}"})
+                              })
+                            }
+                            })();
+                          </script>
+                        </div>
+                        
                       </div>
-                      
                     </div>
                   </div>
                 </div>
-              </div>
             </div>
+            {% endfor %}
           </div>
-
-          {% endfor %}
         </div>
-      </div>
     </div>
+    
 
     <!-- import jquery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>

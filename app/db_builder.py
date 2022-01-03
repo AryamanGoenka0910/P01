@@ -107,9 +107,10 @@ def update_post(post_id, recipe_id, image_link, post_description):
   c.execute(f'UPDATE user_post SET recipe_id = ?, post_description = ?, image_link = ? where post_id == ?', (recipe_id, image_link, post_description, post_id))
   db.commit()
   
-def delete_post(post_id):
+def delete_post(user_id, post_id):
   c = db.cursor()
-  c.execute(f'DELETE FROM user_post where post_id == ?', (post_id))
+  c.execute(f'DELETE FROM user_post where user_id == ? and post_id == ?', (user_id, post_id))
+  c.execute(f'DELETE FROM user_comment where post_id == ?', [post_id])
   db.commit()
 
 def get_posts(user_id, offset, limit):
@@ -176,18 +177,18 @@ def is_recipe_favorited(user_id, post_id):
 
 def create_comment(user_id, post_id, comment):
   c = db.cursor()
-  c.execute("INSERT INTO user_post VALUES(null, ?, ?, ?)", (user_id, post_id, comment))
+  c.execute("INSERT INTO user_comment VALUES(null, ?, ?, ?)", (user_id, post_id, comment))
   db.commit()
   
-def delete_comment(comment_id):
+def delete_comment(user_id, comment_id):
   c = db.cursor()
-  c.execute('DELETE FROM user_comment where comment_id == ?', (comment_id))
+  c.execute('DELETE FROM user_comment where user_id = ? AND comment_id == ?', (user_id, comment_id))
   db.commit()
 
-def get_comments(user_id, offset, limit):
+def get_comments(post_id, offset, limit):
     
     c = db.cursor()
-    result = list(c.execute(f'SELECT comment_id, user_id, post_id, comment FROM user_comment WHERE user_id == ? order by comment_id limit ? offset ? ', (user_id, limit, offset)))
+    result = list(c.execute(f'SELECT comment_id, user_id, post_id, comment FROM user_comment WHERE post_id == ? order by comment_id limit ? offset ? ', (post_id, limit, offset)))
     return [{
         "comment_id": comment_id,
         "user_id": user_id,

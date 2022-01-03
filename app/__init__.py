@@ -168,7 +168,10 @@ def display_user_posts(username):
     if not logged_in:
         return redirect(url_for('landing'))
     user_id = db_builder.get_id_from_username(username)
+    
     templateArgs = {
+        "openModalOnLoad": request.args.get('openModalOnLoad', None),
+        "db_builder": db_builder,
         "user_posts" : db_builder.get_posts(user_id, 0, 50),
         "user_personal_info": db_builder.get_user_info(user_id),
         "user_post_count": db_builder.get_user_post_count(user_id),
@@ -192,6 +195,30 @@ def update_user_info():
     db_builder.update_user_info(user_id, original['preferred_cuisines'], original['diet'], original['intolerances'], display_name, bio, original['profile_picture'])
     return redirect(f"/user/{username}/saved_recipes")
 
+@app.route('/api/make_comment', methods=['POST'])
+def make_comment():
+    if not logged_in(): 
+        return redirect(url_for('landing'))
+    user_id = db_builder.get_id_from_username(session.get('username'))
+    db_builder.create_comment(user_id, request.json['post_id'], request.json['comment'])
+    print((user_id, request.json['post_id'], request.json['comment']))
+    return {
+        "successful": True
+    }
+
+@app.route('/api/delete_comment', methods=['POST'])
+def delete_comment():
+    if not logged_in(): 
+        return redirect(url_for('landing'))
+    user_id = db_builder.get_id_from_username(session.get('username'))
+    db_builder.delete_comment(user_id, request.json['comment_id'])
+    return {
+        "successful": True
+    }
+    
+    
+    
+    
 @app.route('/api/update_user_profile_picture', methods=['POST'])
 def update_user_profile_picture():
     if not logged_in(): 

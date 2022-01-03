@@ -122,7 +122,20 @@ def display_user_posts(username):
         "lookingAtOwnBlog": session.get('username') == username
     }
 
-
+@app.route('/user/<string:username>/user_profile', methods=['GET'])
+def display_user_profile(username):
+    if not logged_in:
+        return redirect(url_for('landing'))
+    user_id = db_builder.get_id_from_username(username)
+    templateArgs = {
+        
+        "user_personal_info": db_builder.get_user_info(user_id),
+        "username": username,
+        "user_id": user_id,
+        
+    }
+    
+    return render_template("edit_profile.html", **templateArgs)
 
 @app.route('/user/<string:username>/saved_recipes', methods=['GET'])
 def display_user_favoriteRecipes(username):
@@ -131,10 +144,13 @@ def display_user_favoriteRecipes(username):
     user_id = db_builder.get_id_from_username(username)
     templateArgs = {
         "favorite_recipes" : db_builder.get_favorite_recipes(user_id, 0, 50),
+        "user_personal_info": db_builder.get_user_info(user_id),
         "username": username,
         "user_id": user_id,
         "lookingAtOwnBlog": session.get('username') == username
     }
+    
+    return render_template("favorite_recipes.html", **templateArgs)
 
 @app.route('/api/is_recipe_favorited', methods=['POST'])
 def is_recipe_favorited():

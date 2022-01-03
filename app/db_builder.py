@@ -78,7 +78,7 @@ def signup(username, password):
 
   else:
       c.execute('INSERT INTO user VALUES (null, ?, ?)', (username, password))
-
+      
       db.commit()
       # Uses empty quotes since it will return false when checked as a boolean
       return  ""
@@ -152,7 +152,7 @@ def favorite_recipe(user_id, recipe_id, spoonacularRecipeJSON):
 def get_favorite_recipes(user_id, offset, limit):
     """Returns a list of posts"""
     c = db.cursor()
-    result = list(c.execute(f'SELECT user_id, recipe_id, spoonacularRecipeJSON FROM user_favorite_recipe WHERE user_id == ? order by post_id limit ? offset ? ', (user_id, limit, offset)))
+    result = list(c.execute(f'SELECT user_id, recipe_id, spoonacularRecipeJSON FROM user_favorite_recipe WHERE user_id == ? order by rowid limit ? offset ? ', (user_id, limit, offset)))
     return [{
         "user_id": user_id,
         "recipe_id": recipe_id,
@@ -199,14 +199,20 @@ def get_user_info(user_id):
   c = db.cursor()
   c.execute("SELECT user_id, preferred_cuisines, diet, intolerances, display_name, bio FROM user_personal_info WHERE user_id = ?", [user_id])
   result = c.fetchone()
-  return [{
+  if(not result):
+    create_user_info(user_id)
+    c = db.cursor()
+    c.execute("SELECT user_id, preferred_cuisines, diet, intolerances, display_name, bio FROM user_personal_info WHERE user_id = ?", [user_id])
+    result = c.fetchone()
+  
+  return {
         "user_id": user_id,
-        "preferred_cuisines": json.loads(preferred_cuisines),
-        "diet": diet,
-        "intolerances": json.loads(intolerances),
-        "display_name": display_name,
-        "bio": bio
-    } for (user_id, preferred_cuisines, diet, intolerances, display_name, bio) in result][0]
+        "preferred_cuisines": json.loads(result[1]),
+        "diet": result[2],
+        "intolerances": json.loads(result[3]),
+        "display_name": result[4],
+        "bio": result[5]
+    } 
 
 def get_id_from_username(username): 
   c = db.cursor()

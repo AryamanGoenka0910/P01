@@ -125,6 +125,20 @@
                     user_id: "{{user_id}}",
                     recipe_id: "{{recipe['id']}}",
                   };
+                  postData("/api/is_recipe_favorited", dataToPost).then(
+                    (json) => {
+                      console.log(json);
+                      if (json.favorited) {
+                        filledHeart.style.display = "block";
+                        emptyHeart.style.display = "none";
+                        console.log(dataToPost);
+                      } else {
+                        filledHeart.style.display = "none";
+                        emptyHeart.style.display = "block";
+                        console.log(dataToPost);
+                      }
+                    }
+                  );
                   element.onclick = () => {
                     console.log(dataToPost);
                     postData("/api/is_recipe_favorited", dataToPost).then(

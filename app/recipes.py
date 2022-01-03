@@ -1,6 +1,6 @@
 import requests
 
-apiKey = "75ac2f64fd464206b3df85eedc3ca67c"
+apiKey = "e9e1becba4c54f5296a7285059e2c485"
 
 def searchRecipes(query):
   r = requests.get("https://api.spoonacular.com/recipes/complexSearch", 

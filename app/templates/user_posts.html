@@ -579,7 +579,7 @@
 
                           submit_button.onclick = () => {
                             postData("/api/make_comment", {post_id: "{{post['post_id']}}", comment: comment_box.value}).then((data) => {
-                              window.location.href = window.location.pathname+"?"+$.param({'openModalOnLoad':'{{post['post_id']}}'})
+                              window.location.href = window.location.pathname+"?"+$.param({'openModalOnLoad':"{{post['post_id']}}"})
                             })
                           }
                           })();

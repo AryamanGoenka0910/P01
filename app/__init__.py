@@ -170,6 +170,7 @@ def display_user_posts(username):
     user_id = db_builder.get_id_from_username(username)
     
     templateArgs = {
+        "print": print,
         "openModalOnLoad": request.args.get('openModalOnLoad', None),
         "db_builder": db_builder,
         "user_posts" : db_builder.get_posts(user_id, 0, 50),
@@ -178,8 +179,10 @@ def display_user_posts(username):
         "user_favorite_recipe_count": db_builder.get_favorite_recipe_count(user_id),
         "username": username,
         "user_id": user_id,
-        "lookingAtOwnBlog": session.get('username') == username
+        "lookingAtOwnBlog": session.get('username') == username,
+        "viewer_user_id": db_builder.get_id_from_username(session.get('username'))
     }
+   
     
     return render_template("user_posts.html", **templateArgs)
 

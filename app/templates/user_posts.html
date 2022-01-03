@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
-      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
       crossorigin="anonymous"
     />
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -399,17 +399,93 @@
               class="modal fade"
               id="postModal{{post['post_id']}}"
               tabindex="-1"
-              aria-labelledby="staticBackdropLabel"
+              role="dialog"
+              aria-labelledby="exampleModalCenterTitle"
               aria-hidden="true"
             >
-              <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                  <div class="modal-body">
+              <div
+                class="modal-dialog modal-dialog-centered"
+                role="document"
+                style="justify-content: center"
+              >
+                <div class="modal-content" style="display: table">
+                  <div class="modal-body p-0">
                     <div style="display: flex">
-                      <img src="{{post['image_link']}}" />
-                      <section style="display: flex; flex-direction: column">
-                        <!-- Comments -->
-                        <img />
+                      <img
+                        src="{{post['image_link']}}"
+                        style="max-height: 75vh; max-width: 60vw"
+                      />
+                      <section class="p-3">
+                        <div
+                          style="
+                            display: flex;
+                            align-items: center;
+                            width: 25vw;
+                          "
+                        >
+                          <img
+                            src="{{user_personal_info['profile_picture']}}"
+                            style="border-radius: 9999px"
+                            width="38px"
+                            height="38px"
+                          />
+                          <a
+                            href="/user/{{username}}/user_posts"
+                            style="
+                              margin-left: 1rem;
+                              cursor: pointer;
+                              text-decoration: none;
+                              color: black;
+                            "><b>{{username}}</b></a>
+                          <form method="post" action="/api/delete_post" style="margin-left: auto;">
+                            <input
+                              type="text"
+                              name="post_id"
+                              value="{{post['post_id']}}"
+                              style="display: none"
+                            />
+                            <input
+                              type="submit"
+                              class="btn-danger rounded"
+                              style="margin-left: auto"
+                              value="Delete"
+                            >
+                              
+                            </input>
+                          </form>
+                        </div>
+                        <hr>
+                        {% if post['post_description'] %}
+                        <div style="display: flex;">
+                          <img
+                            src="{{user_personal_info['profile_picture']}}"
+                            style="border-radius: 9999px; align-self: center;"
+                            width="38px"
+                            height="38px"
+                            
+                          />
+                          
+                            <div style="
+                              
+                              margin-left: 1rem;
+                              cursor: pointer;
+                              text-decoration: none;
+                              color: black;
+                              display: flex;
+                              flex-direction: column;
+                            ">
+                            <a href="/user/{{username}}/user_posts" 
+                              style="text-decoration: none; 
+                                    color: black;"><b>{{username}}</b></a> 
+                            <span>{{post['post_description']}}</span>
+                            </div>
+                            
+                          
+                          
+                          
+                          
+                        </div>
+                        {% endif %}
                       </section>
                     </div>
                   </div>
@@ -424,8 +500,8 @@
     </div>
 
     <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
       crossorigin="anonymous"
     ></script>
   </body>

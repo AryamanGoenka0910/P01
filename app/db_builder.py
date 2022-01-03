@@ -107,9 +107,9 @@ def update_post(post_id, recipe_id, image_link, post_description):
   c.execute(f'UPDATE user_post SET recipe_id = ?, post_description = ?, image_link = ? where post_id == ?', (recipe_id, image_link, post_description, post_id))
   db.commit()
   
-def delete_post(post_id):
+def delete_post(user_id, post_id):
   c = db.cursor()
-  c.execute(f'DELETE FROM user_post where post_id == ?', (post_id))
+  c.execute(f'DELETE FROM user_post where user_id == ? and post_id == ?', (user_id, post_id))
   db.commit()
 
 def get_posts(user_id, offset, limit):

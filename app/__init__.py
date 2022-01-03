@@ -218,6 +218,16 @@ def make_post():
     db_builder.create_post(user_id, None, f"data:{image_link.mimetype};base64,{str(image_string)}", post_description)
     return redirect(f"/user/{username}/user_posts")
 
+@app.route('/api/delete_post', methods=['POST'])
+def delete_post():
+    if not logged_in():
+        return redirect(url_for('landing'))
+    username = session.get('username')
+    user_id = db_builder.get_id_from_username(username)
+    post_id = request.form.get('post_id')
+    db_builder.delete_post(user_id, post_id)
+    return redirect(f'/user/{username}/user_posts')
+
 @app.route('/api/is_recipe_favorited', methods=['POST'])
 def is_recipe_favorited():
     user_id = request.json['user_id']

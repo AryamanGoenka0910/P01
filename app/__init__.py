@@ -12,6 +12,7 @@ import json
 import requests
 import random
 import recipes
+import base64
 
 app = Flask(__name__)
 app.secret_key = 'Mango'
@@ -112,17 +113,6 @@ def logout():
 
 
 
-@app.route('/user/<string:username>', methods=['GET'])
-def display_user_posts(username):
-    if not logged_in:
-        return redirect(url_for('landing'))
-    user_id = db_builder.get_id_from_username(username)
-    templateArgs = {
-        "posts" : db_builder.get_posts(user_id, 0, 50),
-        "username": username,
-        "user_id": user_id,
-        "lookingAtOwnBlog": session.get('username') == username
-    }
 
 @app.route('/user/<string:username>/user_profile', methods=['GET'])
 def display_user_profile(username):
@@ -147,12 +137,62 @@ def display_user_favoriteRecipes(username):
     templateArgs = {
         "favorite_recipes" : db_builder.get_favorite_recipes(user_id, 0, 50),
         "user_personal_info": db_builder.get_user_info(user_id),
+        "user_post_count": db_builder.get_user_post_count(user_id),
+        "user_favorite_recipe_count": db_builder.get_favorite_recipe_count(user_id),
         "username": username,
         "user_id": user_id,
         "lookingAtOwnBlog": session.get('username') == username
     }
     
     return render_template("favorite_recipes.html", **templateArgs)
+
+@app.route('/user/<string:username>/user_comments', methods=['GET'])
+def display_user_comments(username):
+    if not logged_in:
+        return redirect(url_for('landing'))
+    user_id = db_builder.get_id_from_username(username)
+    templateArgs = {
+        "user_comments": db_builder.get_comments(user_id, 0, 50),
+        "user_personal_info": db_builder.get_user_info(user_id),
+        "user_post_count": db_builder.get_user_post_count(user_id),
+        "user_favorite_recipe_count": db_builder.get_favorite_recipe_count(user_id),
+        "username": username,
+        "user_id": user_id,
+        "lookingAtOwnBlog": session.get('username') == username
+    }
+    
+    return render_template("user_comments.html", **templateArgs)
+
+@app.route('/user/<string:username>/user_posts', methods=['GET'])
+def display_user_posts(username):
+    if not logged_in:
+        return redirect(url_for('landing'))
+    user_id = db_builder.get_id_from_username(username)
+    templateArgs = {
+        "user_posts" : db_builder.get_posts(user_id, 0, 50),
+        "user_personal_info": db_builder.get_user_info(user_id),
+        "user_post_count": db_builder.get_user_post_count(user_id),
+        "user_favorite_recipe_count": db_builder.get_favorite_recipe_count(user_id),
+        "username": username,
+        "user_id": user_id,
+        "lookingAtOwnBlog": session.get('username') == username
+    }
+    
+    return render_template("user_posts.html", **templateArgs)
+
+@app.route('/api/make_post', methods=['POST'])
+def make_post():
+    if not logged_in():
+        return redirect(url_for('landing'))
+    user_id = db_builder.get_id_from_username(session.get('username'))
+    username = session.get("username")
+    image_link = request.files.get('image_link') #Not actually a link. This is actually a file. 
+    image_string = base64.b64encode(image_link.read()).decode('ascii')
+    
+    post_description = request.form.get("post_description")
+    
+    db_builder.create_post(user_id, None, f"data:{image_link.mimetype};base64,{str(image_string)}", post_description)
+    return redirect(f"/user/{username}/user_posts")
 
 @app.route('/api/is_recipe_favorited', methods=['POST'])
 def is_recipe_favorited():

@@ -1,60 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <meta charset="utf-8">
+  <head>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+    <meta charset="utf-8" />
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        {% if logged_in %}
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active"><a class="nav-link" href="/">Home</a></li>
-            <li class="nav-item active"><a class="nav-link" href="/restaurants">Restaurants</a></li>
+          <li class="nav-item active"><a class="nav-link" href="/">Home</a></li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/restaurants">Restaurants</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/recipes/search">Recipes</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/user/{{username}}/saved_recipes"
+              >Profile</a
+            >
+          </li>
         </ul>
-        {% else %}
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active"><a class="nav-link" href="/">Home</a></li>
-            <li class="nav-item active"><a class="nav-link" href="/login">Login</a></li>
-            <li class="nav-item active"><a class="nav-link" href="/register">Register</a></li>
-            <li class="nav-item active"><a class="nav-link" href="/restaurants">Restaurants</a></li>
-        </ul>
-        {% endif %}
-    </div>
-    </nav>
-</head>
-<body>
-    <br><br>
-    <form action="/restaurants/search" class="d-flex">
-      <div class="mx-auto" style="width: 600px;">
-        <label for="search">Location</label>
-        <input class="form-control" id="location" type="search" name="location" placeholder="zip code, city, state..." aria-label="Search">
       </div>
-      <div class="mx-auto" style="width: 200px;">
+    </nav>
+  </head>
+  <body>
+    <br /><br />
+    <form action="/restaurants/search" class="d-flex">
+      <div class="mx-auto" style="width: 600px">
+        <label for="search">Location</label>
+        <input
+          class="form-control"
+          id="location"
+          type="search"
+          name="location"
+          placeholder="zip code, city, state..."
+          aria-label="Search"
+        />
+      </div>
+      <div class="mx-auto" style="width: 200px">
         <label for="cuisine">Cuisine</label>
         <select name="cuisine" id="cuisine" class="form-control">
           <option selected>All</option>
-          <option>African</option> <option>British</option> <option>Cajun</option> <option>Caribbean</option> <option>Chinese</option>  <option>Eastern European</option>
-          <option>European</option> <option>French</option> <option>German</option> <option>Greek</option> <option>Indian</option> <option>Irish</option> <option>Italian</option>  
-          <option>Japanese</option> <option>Jewish</option> <option>Korean</option> <option>Latin American</option> <option>Mediterranean</option> <option>Mexican</option>  
-          <option>Middle Eastern</option> <option>Nordic</option> <option>Southern</option> <option>Spanish</option> <option>Thai</option> <option>Vietnamese</option> <option>American</option> 
+          <option>African</option>
+          <option>British</option>
+          <option>Cajun</option>
+          <option>Caribbean</option>
+          <option>Chinese</option>
+          <option>Eastern European</option>
+          <option>European</option>
+          <option>French</option>
+          <option>German</option>
+          <option>Greek</option>
+          <option>Indian</option>
+          <option>Irish</option>
+          <option>Italian</option>
+          <option>Japanese</option>
+          <option>Jewish</option>
+          <option>Korean</option>
+          <option>Latin American</option>
+          <option>Mediterranean</option>
+          <option>Mexican</option>
+          <option>Middle Eastern</option>
+          <option>Nordic</option>
+          <option>Southern</option>
+          <option>Spanish</option>
+          <option>Thai</option>
+          <option>Vietnamese</option>
+          <option>American</option>
         </select>
       </div>
-      <button class="btn btn-outline-success" type="submit">Search</button>  
+      <button class="btn btn-outline-success" type="submit">Search</button>
     </form>
-    <br><br>
+    <br /><br />
     <div class="container-fluid">
       <div class="row row-cols-1 row-cols-md-3 g-4">
         {% for res in data %}
         <div class="col sm-6">
           <div class="card m-3">
-            <img class="card-img-top" src={{res['image_url']}} alt="Card image cap">
+            <img class="card-img-top" src={{res['image_url']}} alt="Card image
+            cap">
             <div class="card-body">
               <h5 class="card-title">{{res['name']}}</h5>
               <h6>Rating: {{res['rating']}}</h6>
               <p>
-                {% for i in res['location']['display_address'] %}
-                {{i}}
-                {% endfor %}
-                <br>
+                {% for i in res['location']['display_address'] %} {{i}} {%
+                endfor %}
+                <br />
                 {{res['display_phone']}}
               </p>
               <h6>Cuisines:</h6>
@@ -63,11 +98,16 @@
                 <li class="list-group-item">{{i['title']}}</li>
                 {% endfor %}
               </ul>
-              <a href="/restaurants/view?id={{res['id']}}" class="btn btn-primary">Go somewhere</a>
+              <a
+                href="/restaurants/view?id={{res['id']}}"
+                class="btn btn-primary"
+                >Go somewhere</a
+              >
             </div>
           </div>
         </div>
         {% endfor %}
       </div>
     </div>
-</body>
+  </body>
+</html>

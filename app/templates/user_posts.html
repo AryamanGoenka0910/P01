@@ -5,6 +5,423 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active"><a class="nav-link" href="/">Home</a></li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/restaurants">Restaurants</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/recipes/search">Recipes</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/user/{{username}}/saved_recipes"
+              >Profile</a
+            >
+          </li>
+          <li style="padding: 0 10px">
+            <button
+              type="button"
+              class="btn btn-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#staticBackdrop"
+            >
+              Make a Post
+            </button>
+            <div
+              class="modal fade"
+              id="staticBackdrop"
+              tabindex="-1"
+              aria-labelledby="staticBackdropLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5
+                      class="modal-title text-center"
+                      id="staticBackdropLabel"
+                    >
+                      Create New Post
+                    </h5>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="modal-body">
+                    <div style="display: flex; flex-direction: column">
+                      <form
+                        action="/api/make_post"
+                        method="post"
+                        enctype="multipart/form-data"
+                      >
+                        <div class="form-group">
+                          <div
+                            style="
+                              margin-top: 20px;
+                              display: flex;
+                              margin-bottom: 10px;
+                            "
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="24"
+                              height="24"
+                              fill="currentColor"
+                              class="bi bi-file-earmark-image"
+                              viewBox="0 0 16 16"
+                            >
+                              <path
+                                d="M6.502 7a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"
+                              />
+                              <path
+                                d="M14 14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5V14zM4 1a1 1 0 0 0-1 1v10l2.224-2.224a.5.5 0 0 1 .61-.075L8 11l2.157-3.02a.5.5 0 0 1 .76-.063L13 10V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4z"
+                              />
+                            </svg>
+                            <span style="padding-left: 14px"
+                              >Upload a Picture:</span
+                            >
+                          </div>
+
+                          <label
+                            for="exampleFormControlFile1"
+                            style="padding-right: 32px"
+                          >
+                          </label>
+                          <input
+                            type="file"
+                            class="form-control-file"
+                            id="exampleFormControlFile1"
+                            name="image_link"
+                          />
+                          <div class="form-group" style="margin-top: 30px">
+                            <label for="exampleFormControlTextarea1"
+                              >Write A Description:</label
+                            >
+                            <textarea
+                              class="form-control"
+                              id="exampleFormControlTextarea1"
+                              rows="3"
+                              name="post_description"
+                            ></textarea>
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <input
+                            type="submit"
+                            class="btn-primary rounded"
+                            style="padding: 2.5px 15px"
+                            value="Post"
+                          />
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
   </head>
-  <body></body>
+  <body>
+    <div style="width: 905px" class="mx-auto">
+      <div style="display: flex; justify-content: center; margin: 30px 0">
+        <div style="width: 291.67px; display: flex; justify-content: center">
+          <img
+            src="/static/images/defaultProfile.jpg"
+            width="150px"
+            height="150px"
+          />
+        </div>
+        <section
+          style="
+            width: 613.33px;
+            height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+          "
+        >
+          <div style="display: flex; align-items: center">
+            <h1
+              class="display-4 text-lowercase"
+              style="font-size: 32px; padding-right: 30px"
+            >
+              {{username}}
+            </h1>
+            {% if lookingAtOwnBlog %}
+            <a href="/user/{{username}}/user_profile">
+              <button
+                class="btn-light rounded"
+                style="
+                  border: 1px solid black;
+                  height: 30px;
+                  align-self: center;
+                "
+              >
+                Edit Profile
+              </button>
+            </a>
+            {% endif %}
+          </div>
+          <div style="display: flex">
+            <p style="padding-right: 30px"><b>{{user_post_count}}</b> posts</p>
+            <p><b>{{user_favorite_recipe_count}}</b> recipes</p>
+          </div>
+          <div>
+            <p>{{user_personal_info["display_name"]}}</p>
+            <p>{{user_personal_info["bio"]}}</p>
+          </div>
+        </section>
+      </div>
+      <div
+        style="max-width: 905px; border-top: solid 1px rgb(236, 236, 236)"
+        class="mx-auto"
+      ></div>
+      <div
+        style="display: flex; justify-content: space-between; width: 400px"
+        class="mx-auto"
+      >
+        <a
+          href="/user/{{username}}/user_posts"
+          style="text-decoration: none; color: black"
+        >
+          <section
+            style="
+              padding-top: 19px;
+              padding-bottom: 20px;
+              border-top: 1px black solid;
+            "
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-grid-3x3"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M0 1.5A1.5 1.5 0 0 1 1.5 0h13A1.5 1.5 0 0 1 16 1.5v13a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13zM1.5 1a.5.5 0 0 0-.5.5V5h4V1H1.5zM5 6H1v4h4V6zm1 4h4V6H6v4zm-1 1H1v3.5a.5.5 0 0 0 .5.5H5v-4zm1 0v4h4v-4H6zm5 0v4h3.5a.5.5 0 0 0 .5-.5V11h-4zm0-1h4V6h-4v4zm0-5h4V1.5a.5.5 0 0 0-.5-.5H11v4zm-1 0V1H6v4h4z"
+              />
+            </svg>
+            <span>Posts</span>
+          </section>
+        </a>
+
+        <a
+          href="/user/{{username}}/saved_recipes"
+          style="text-decoration: none; color: black"
+        >
+          <section style="padding-top: 20px; padding-bottom: 20px">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-bookmark"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"
+              />
+            </svg>
+            <span>Saved</span>
+          </section>
+        </a>
+
+        <a
+          href="/user/{{username}}/user_comments"
+          style="text-decoration: none; color: black"
+        >
+          <section style="padding-top: 20px; padding-bottom: 20px">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-chat-left"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"
+              />
+            </svg>
+            <span>Comments</span>
+          </section>
+        </a>
+      </div>
+      {% if user_post_count == 0 %}
+      <div
+        style="
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          margin-top: 30px;
+        "
+      >
+        <p style="font-size: 32px">You have no posts :(</p>
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#staticBackdrop"
+        >
+          Make a Post
+        </button>
+
+        <!-- Modal -->
+        <div
+          class="modal fade"
+          id="staticBackdrop"
+          tabindex="-1"
+          aria-labelledby="staticBackdropLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title text-center" id="staticBackdropLabel">
+                  Create New Post
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <div style="display: flex; flex-direction: column">
+                  <form action="/api/make_post" method="post">
+                    <div class="form-group">
+                      <div
+                        style="
+                          margin-top: 20px;
+                          display: flex;
+                          margin-bottom: 10px;
+                        "
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          fill="currentColor"
+                          class="bi bi-file-earmark-image"
+                          viewBox="0 0 16 16"
+                        >
+                          <path
+                            d="M6.502 7a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"
+                          />
+                          <path
+                            d="M14 14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5V14zM4 1a1 1 0 0 0-1 1v10l2.224-2.224a.5.5 0 0 1 .61-.075L8 11l2.157-3.02a.5.5 0 0 1 .76-.063L13 10V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4z"
+                          />
+                        </svg>
+                        <span style="padding-left: 14px"
+                          >Upload a Picture:</span
+                        >
+                      </div>
+
+                      <label
+                        for="exampleFormControlFile1"
+                        style="padding-right: 32px"
+                      >
+                      </label>
+                      <input
+                        type="file"
+                        class="form-control-file"
+                        id="exampleFormControlFile1"
+                        name="image_link"
+                      />
+                      <div class="form-group" style="margin-top: 30px">
+                        <label for="exampleFormControlTextarea1"
+                          >Write A Description:</label
+                        >
+                        <textarea
+                          class="form-control"
+                          id="exampleFormControlTextarea1"
+                          rows="3"
+                          name="post_description"
+                        ></textarea>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <input
+                        type="submit"
+                        class="btn-primary rounded"
+                        style="padding: 2.5px 15px"
+                        value="Post"
+                      />
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      <div>
+        <div class="row g-5">
+          {% for post in user_posts %}
+          <div class="col-4">
+            <div
+              data-bs-toggle="modal"
+              data-bs-target="#postModal{{post['post_id']}}"
+              style="
+                width: 293px;
+                height: 293px;
+                overflow: hidden;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: grey;
+                cursor: pointer;
+              "
+            >
+              <img style="height: 293px" src="{{post['image_link']}}" />
+            </div>
+            <!-- Modal -->
+            <div
+              class="modal fade"
+              id="postModal{{post['post_id']}}"
+              tabindex="-1"
+              aria-labelledby="staticBackdropLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-body">
+                    <div style="display: flex">
+                      <img src="{{post['image_link']}}" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+  </body>
 </html>

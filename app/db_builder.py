@@ -115,13 +115,14 @@ def delete_post(post_id):
 def get_posts(user_id, offset, limit):
     """Returns a list of posts"""
     c = db.cursor()
-    result = list(c.execute(f'SELECT user_id, recipe_id, image_link, post_description FROM user_post WHERE user_id == ? order by post_id limit ? offset ? ', (user_id, limit, offset)))
+    result = list(c.execute(f'SELECT post_id, user_id, recipe_id, image_link, post_description FROM user_post WHERE user_id == ? order by post_id DESC limit ? offset ? ', (user_id, limit, offset)))
     return [{
+        "post_id": post_id,
         "user_id": user_id,
         "recipe_id": recipe_id,
         "image_link": image_link,
         "post_description": post_description,
-    } for (user_id, recipe_id, image_link, post_description) in result] #all the entries of a user
+    } for (post_id, user_id, recipe_id, image_link, post_description) in result] #all the entries of a user
 
 def favorite_post(user_id, post_id):
   c = db.cursor()
@@ -150,9 +151,9 @@ def favorite_recipe(user_id, recipe_id, spoonacularRecipeJSON):
   db.commit()
 
 def get_favorite_recipes(user_id, offset, limit):
-    """Returns a list of posts"""
+    
     c = db.cursor()
-    result = list(c.execute(f'SELECT user_id, recipe_id, spoonacularRecipeJSON FROM user_favorite_recipe WHERE user_id == ? order by rowid limit ? offset ? ', (user_id, limit, offset)))
+    result = list(c.execute(f'SELECT user_id, recipe_id, spoonacularRecipeJSON FROM user_favorite_recipe WHERE user_id == ? order by rowid DESC limit ? offset ? ', (user_id, limit, offset)))
     return [{
         "user_id": user_id,
         "recipe_id": recipe_id,
@@ -182,6 +183,26 @@ def delete_comment(comment_id):
   c = db.cursor()
   c.execute('DELETE FROM user_comment where comment_id == ?', (comment_id))
   db.commit()
+
+def get_comments(user_id, offset, limit):
+    
+    c = db.cursor()
+    result = list(c.execute(f'SELECT comment_id, user_id, post_id, comment FROM user_comment WHERE user_id == ? order by comment_id limit ? offset ? ', (user_id, limit, offset)))
+    return [{
+        "comment_id": comment_id,
+        "user_id": user_id,
+        "post_id": post_id,
+        "comment": comment,
+    } for (comment_id, user_id, post_id, comment) in result] #all the entries of a user
+
+def get_favorite_recipe_count(user_id):
+  c = db.cursor()
+  return len(list(c.execute("SELECT * FROM user_favorite_recipe WHERE user_id = ?", [user_id])))
+
+def get_user_post_count(user_id):
+  c = db.cursor()
+  return len(list(c.execute("SELECT * FROM user_post WHERE user_id = ?", [user_id])))
+
 
 def create_user_info(user_id):
   c = db.cursor()

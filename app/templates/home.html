@@ -15,6 +15,14 @@
           <li class="nav-item active">
             <a class="nav-link" href="/restaurants">Restaurants</a>
           </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/recipes/search">Recipes</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/user/{{username}}/saved_recipes"
+              >Profile</a
+            >
+          </li>
         </ul>
       </div>
     </nav>
@@ -26,23 +34,5 @@
             </li-->
   </head>
 
-  <body>
-    <div class="centerFillFlex">
-      <h1>Hello {{username}}!</h1>
-      <h1>{{user_id}}</h1>
-      <h2>You are logged in. Welcome to the blog site!</h2>
-      <a href="/logout"><p>Log Out</p></a>
-      <a href="/blog/{{user_id}}"><p>Visit Your Blog Page</p></a>
-      <h3>Suggested Blogs:</h3>
-      {% for user in random_users %}
-      <div class="blueBox">
-        <p>
-          <a href="/blog/{{user['user_id']}}" style="text-decoration: none"
-            >{{user['username'] + "'s Blog Page"}}</a
-          >
-        </p>
-      </div>
-      {% endfor %}
-    </div>
-  </body>
+  <body></body>
 </html>

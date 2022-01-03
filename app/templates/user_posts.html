@@ -440,6 +440,7 @@
                                   text-decoration: none;
                                   color: black;
                                 "><b>{{username}}</b></a>
+                              {% if lookingAtOwnBlog %}
                               <form method="post" action="/api/delete_post" style="margin-left: auto;">
                                 <input
                                   type="text"
@@ -456,6 +457,7 @@
                                   
                                 </input>
                               </form>
+                              {% endif %}
                             </div>
                             <hr>
                             {% if post['post_description'] %}
@@ -505,11 +507,13 @@
                                     display: flex;
                                     flex-direction: column;
                                     width: 80%;
+                                    max-width: 80%;
+                                    
                                   ">
                                   <a href="/user/{{db_builder.get_username_from_id(comment['user_id'])}}/user_posts" 
                                     style="text-decoration: none; 
                                           color: black;"><b>{{db_builder.get_username_from_id(comment['user_id'])}}</b></a> 
-                                  <span>{{comment["comment"]}}</span>
+                                  <span style="word-wrap: break-word;">{{comment["comment"]}}</span>
                                   </div>
                                 {% if lookingAtOwnBlog %}
                                 <svg id="delete_comment_id{{comment['comment_id']}}" style="align-self: center; margin-left: auto;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">

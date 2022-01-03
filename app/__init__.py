@@ -13,7 +13,7 @@ import requests
 import random
 import recipes
 import base64
-
+import usda_api
 app = Flask(__name__)
 app.secret_key = 'Mango'
 
@@ -298,6 +298,7 @@ def recipe_page(recipe_id):
         return redirect(url_for('landing'))
     recipe = recipes.getRecipeInformation(recipe_id)
     templateArgs = {
+        'usda_api': usda_api,
         'recipe': recipe,
         'username': session.get('username'),
         'user_id': db_builder.get_id_from_username(session.get('username'))

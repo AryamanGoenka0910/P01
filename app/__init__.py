@@ -180,6 +180,30 @@ def display_user_posts(username):
     
     return render_template("user_posts.html", **templateArgs)
 
+@app.route('/api/update_user_info', methods=['POST'])
+def update_user_info():
+    if not logged_in(): 
+        return redirect(url_for('landing'))
+    user_id = db_builder.get_id_from_username(session.get('username'))
+    username = session.get('username')
+    bio = request.form.get('bio', "")
+    display_name = request.form.get('display_name', "")
+    original = db_builder.get_user_info(user_id)
+    db_builder.update_user_info(user_id, original['preferred_cuisines'], original['diet'], original['intolerances'], display_name, bio, original['profile_picture'])
+    return redirect(f"/user/{username}/saved_recipes")
+
+@app.route('/api/update_user_profile_picture', methods=['POST'])
+def update_user_profile_picture():
+    if not logged_in(): 
+        return redirect(url_for('landing'))
+    user_id = db_builder.get_id_from_username(session.get('username'))
+    username = session.get('username')
+    image_link = request.files.get('profile_picture') #Not actually a link. This is actually a file. 
+    image_string = base64.b64encode(image_link.read()).decode('ascii')
+    original = db_builder.get_user_info(user_id)
+    db_builder.update_user_info(user_id, original['preferred_cuisines'], original['diet'], original['intolerances'], original['display_name'], original['bio'], f"data:{image_link.mimetype};base64,{str(image_string)}")
+    return redirect(f"/user/{username}/saved_recipes")
+
 @app.route('/api/make_post', methods=['POST'])
 def make_post():
     if not logged_in():

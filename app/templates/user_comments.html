@@ -39,7 +39,8 @@
     <div style="display: flex; justify-content: center; margin: 30px 0">
       <div style="width: 291.67px; display: flex; justify-content: center">
         <img
-          src="/static/images/defaultProfile.jpg"
+          src="{{user_personal_info['profile_picture']}}"
+          style="border-radius: 999999px"
           width="150px"
           height="150px"
         />
@@ -76,8 +77,8 @@
           <p><b>{{user_favorite_recipe_count}}</b> recipes</p>
         </div>
         <div>
-          <p>{{user_personal_info["display_name"]}}</p>
-          <p>{{user_personal_info["bio"]}}</p>
+          <b>{{user_personal_info["display_name"]}}</b>
+          <p style="margin: 0">{{user_personal_info["bio"]}}</p>
         </div>
       </section>
     </div>

@@ -29,7 +29,7 @@ def dbsetup():
   command = "CREATE TABLE IF NOT EXISTS user (user_id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT)"
   c.execute(command)      # test SQL stmt in sqlite3 shell, save as string
 
-  command = "CREATE TABLE IF NOT EXISTS user_personal_info (user_id INTEGER PRIMARY KEY NOT NULL, preferred_cuisines TEXT DEFAULT '[]', diet TEXT DEFAULT '', intolerances TEXT DEFAULT '[]', display_name TEXT DEFAULT '', bio TEXT DEFAULT '')"
+  command = "CREATE TABLE IF NOT EXISTS user_personal_info (user_id INTEGER PRIMARY KEY NOT NULL, preferred_cuisines TEXT DEFAULT '[]', diet TEXT DEFAULT '', intolerances TEXT DEFAULT '[]', display_name TEXT DEFAULT '', bio TEXT DEFAULT '', profile_picture TEXT DEFAULT '/static/images/defaultProfile.jpg')"
   c.execute(command) 
 
   # User Favorite Resturants:
@@ -206,24 +206,24 @@ def get_user_post_count(user_id):
 
 def create_user_info(user_id):
   c = db.cursor()
-  c.execute("INSERT INTO user_personal_info VALUES(?, ?, ?, ?, ?, ?)", (user_id, "[]", "", "[]", "", ""))
+  c.execute("INSERT INTO user_personal_info VALUES(?, ?, ?, ?, ?, ?, ?)", (user_id, "[]", "", "[]", "", "", "/static/images/defaultProfile.jpg"))
   db.commit()
   
-def update_user_info(user_id, preferred_cuisines, diet, intolerances, display_name, bio):
+def update_user_info(user_id, preferred_cuisines, diet, intolerances, display_name, bio, profile_picture):
   c = db.cursor()
   preferred_cuisines = json.dumps(preferred_cuisines)
   intolerances = json.dumps(intolerances)
-  c.execute("UPDATE user_personal_info SET preferred_cuisines = ?, diet = ?, intolerances = ?, display_name = ?, bio = ? WHERE user_id = ?", (preferred_cuisines, diet, intolerances, display_name, bio, user_id,))
+  c.execute("UPDATE user_personal_info SET preferred_cuisines = ?, diet = ?, intolerances = ?, display_name = ?, bio = ?, profile_picture = ? WHERE user_id = ?", (preferred_cuisines, diet, intolerances, display_name, bio, profile_picture, user_id))
   db.commit()
 
 def get_user_info(user_id): 
   c = db.cursor()
-  c.execute("SELECT user_id, preferred_cuisines, diet, intolerances, display_name, bio FROM user_personal_info WHERE user_id = ?", [user_id])
+  c.execute("SELECT user_id, preferred_cuisines, diet, intolerances, display_name, bio, profile_picture FROM user_personal_info WHERE user_id = ?", [user_id])
   result = c.fetchone()
   if(not result):
     create_user_info(user_id)
     c = db.cursor()
-    c.execute("SELECT user_id, preferred_cuisines, diet, intolerances, display_name, bio FROM user_personal_info WHERE user_id = ?", [user_id])
+    c.execute("SELECT user_id, preferred_cuisines, diet, intolerances, display_name, bio, profile_picture FROM user_personal_info WHERE user_id = ?", [user_id])
     result = c.fetchone()
   
   return {
@@ -232,7 +232,8 @@ def get_user_info(user_id):
         "diet": result[2],
         "intolerances": json.loads(result[3]),
         "display_name": result[4],
-        "bio": result[5]
+        "bio": result[5],
+        "profile_picture": result[6]
     } 
 
 def get_id_from_username(username): 

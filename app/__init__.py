@@ -112,8 +112,6 @@ def logout():
 #######################
 
 
-
-
 @app.route('/user/<string:username>/user_profile', methods=['GET'])
 def display_user_profile(username):
     if not logged_in:
@@ -366,16 +364,26 @@ def restaurants_view():
 
 @app.route('/recipes/search', methods=['GET', 'POST'])
 def recipes_search():
-    if not logged_in():
-        redirect(url_for("landing"))
-    user_id = db_builder.get_id_from_username(session.get("username"))
-    if(request.method == 'GET'):
-        return render_template('recipes.html', user_id=user_id, username=session.get("username"))
-    if(request.method == 'POST'):
-        query = request.form.get("search")
-        return render_template('recipes.html', recipes=recipes.searchRecipes(query), 
-        user_id=user_id, username=session.get("username"))
+    login = False
+    if logged_in():
+        login = True
+    else:
+        login = False
 
+    if login:    
+        user_id = db_builder.get_id_from_username(session.get("username"))
+        if(request.method == 'GET'):
+            return render_template('recipes.html', user_id=user_id, username=session.get("username"), logged_in=login)
+        if(request.method == 'POST'):
+            query = request.form.get("search")
+            return render_template('recipes.html', recipes=recipes.searchRecipes(query), logged_in=login,
+            user_id=user_id, username=session.get("username"))
+    else:
+        if(request.method == 'GET'):
+            return render_template('recipes.html')
+        if(request.method == 'POST'):
+            query = request.form.get("search")
+            return render_template('recipes.html', recipes=recipes.searchRecipes(query))
 
 if __name__ == '__main__':
     app.debug = True

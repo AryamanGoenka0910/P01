@@ -26,13 +26,66 @@
         </ul>
       </div>
     </nav>
-    <!-- li class="nav">
-                <form action="/" method="post">
-                    <input type="text" name="search" value="{{ search }}">
-                    <input type="submit" style="display: none">
-                </form>
-            </li-->
   </head>
-
-  <body></body>
+  <body>
+    <div class="container">
+      <div class="row sm">
+        <div class="col-8">
+          {% for post in db_builder.get_random_posts(50) %}
+          <div class="row">
+            <img src="{{post['image_link']}}" />
+          </div>
+          {% endfor %}
+        </div>
+        <div class="col-4">
+          <div style="display: flex; align-items: center">
+            <img
+              style="margin-right: 20px; border-radius: 9999px"
+              src="{{user_info['profile_picture']}}"
+              height="64px"
+              width="64px"
+            />
+            <div style="display: flex; flex-direction: column">
+              <span><b>{{username}}</b></span>
+              <span>{{user_info['display_name']}}</span>
+            </div>
+            <div style="margin-left: auto">
+              <a href="/logout" style="color: red">Log Out</a>
+            </div>
+          </div>
+          <div
+            style="display: flex; align-items: center; margin: 20px 0 10px 0"
+          >
+            <span style="color: grey">
+              <b>Suggestions For You</b>
+            </span>
+          </div>
+          {% for user in db_builder.get_random_users(5) if user['user_id'] !=
+          user_id %}
+          <div style="display: flex; align-items: center; margin-top: 10px">
+            <img
+              style="margin-right: 20px; border-radius: 9999px"
+              src="{{db_builder.get_user_info(user['user_id'])['profile_picture']}}"
+              height="32px"
+              width="32px"
+            />
+            <div style="display: flex; flex-direction: column">
+              <span><b>{{user['username']}}</b></span>
+              <span
+                >{{db_builder.get_user_info(user['user_id'])['display_name']}}</span
+              >
+            </div>
+            <div style="margin-left: auto">
+              <a
+                href="/user/{{user['username']}}/saved_recipes"
+                style="color: rgb(15, 168, 228)"
+                >View</a
+              >
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </body>
 </html>

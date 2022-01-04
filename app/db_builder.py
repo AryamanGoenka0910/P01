@@ -247,11 +247,10 @@ def get_username_from_id(user_id):
   c.execute("SELECT username FROM user where user_id = ?", [user_id])
   return c.fetchone()[0]
 
-def get_random_users():
-    """Returns either 10 random users or all users to display as recommended blogs on the homepage"""
+def get_random_users(count):
     c = db.cursor()
     rows = list(c.execute('SELECT COUNT(*) FROM user'))[0][0] #length of users table
-    population_count = 10 if rows >= 10 else rows
+    population_count = count if rows >= count else rows
     user_ids = random.sample(range(1,rows+1), population_count) #takes 10 distinct random users
     usernames = [get_username_from_id(user_id) for user_id in user_ids]
     return [
@@ -260,4 +259,15 @@ def get_random_users():
             'user_id': user_id
         } 
     for (username, user_id) in zip(usernames, user_ids)]
+
+def get_random_posts(count):
+    c = db.cursor()
+    results = list(c.execute("SELECT * FROM user_post WHERE post_id IN (SELECT post_id FROM user_post ORDER BY RANDOM() LIMIT ?)", [count]))
+    return [{
+        'post_id': post_id,
+        'user_id': user_id,
+        'recipe_id': recipe_id,
+        'image_link': image_link,
+        'post_description': post_description
+      } for (post_id, user_id, recipe_id, image_link, post_description) in results]
   

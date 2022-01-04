@@ -29,7 +29,13 @@ def landing():
     if logged_in():
       username = session['username']
       user_id = db_builder.get_id_from_username(username)
-      return render_template('home.html', username=username, user_id=user_id, random_users=db_builder.get_random_users())
+      templateArgs = {
+          "user_id": user_id,
+          "username": session.get('username'),
+          "user_info": db_builder.get_user_info(user_id),
+          "db_builder": db_builder,
+      }
+      return render_template('home.html', **templateArgs)
     else:
       # If not logged in, show login page
       return render_template('intro.html')

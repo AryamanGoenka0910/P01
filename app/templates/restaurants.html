@@ -32,8 +32,19 @@
   <body>
     <br /><br />
     <form action="/restaurants/search" class="d-flex">
+      
       <div class="mx-auto" style="width: 600px">
-        <label for="search">Location</label>
+        <input
+          class="form-control"
+          id="keyword"
+          type="search"
+          name="keyword"
+          placeholder="Keywords..."
+          aria-label="Search"
+        />
+      </div>
+      
+      <div class="mx-auto" style="width: 400px">
         <input
           class="form-control"
           id="location"
@@ -43,10 +54,10 @@
           aria-label="Search"
         />
       </div>
+
       <div class="mx-auto" style="width: 200px">
-        <label for="cuisine">Cuisine</label>
-        <select name="cuisine" id="cuisine" class="form-control">
-          <option selected>All</option>
+        <select name="cuisine" id="cuisine" class="form-select">
+          <option selected>All Cuisines</option>
           <option>African</option>
           <option>British</option>
           <option>Cajun</option>
@@ -75,8 +86,11 @@
           <option>American</option>
         </select>
       </div>
-      <button class="btn btn-outline-success" type="submit">Search</button>
+      <div class="mx-auto">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </div>
     </form>
+   
     <br /><br />
     <div class="container-fluid">
       <div class="row row-cols-1 row-cols-md-3 g-4">
@@ -102,9 +116,16 @@
               </ul>
               <a
                 href="/restaurants/view?id={{res['id']}}"
-                class="btn btn-primary"
-                >Go somewhere</a
+                style="margin-right: 10px"
+                class="d-inline-block"
+                >
+                <button
+                class="btn-light rounded"
+                style="border: black solid 1px"
               >
+                View
+              </button>
+            </a>
             </div>
           </div>
         </div>

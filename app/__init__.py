@@ -6,6 +6,7 @@ P00: ArRESTed Development
 '''
 import re
 import sqlite3
+from weakref import KeyedRef
 import db_builder
 from flask import Flask, render_template, request, session, redirect, url_for
 import json
@@ -289,19 +290,28 @@ def unfavorite_recipe():
     recipe_id = request.json['recipe_id']
     db_builder.unfavorite_recipe(user_id, recipe_id)
     return {"message": "Successfully unfavorited recipe"}
-    
+
+  
+####API FUNCTIONS#####
+#######################
+
 @app.route('/recipe/<int:recipe_id>', methods=['GET'])
 def recipe_page(recipe_id):
-    if not logged_in():
-        return redirect(url_for('landing'))
+    login = False
     recipe = recipes.getRecipeInformation(recipe_id)
-    templateArgs = {
+    if logged_in():
+        login = True
+        templateArgs = {
         'recipe': recipe,
         'username': session.get('username'),
         'user_id': db_builder.get_id_from_username(session.get('username'))
     }
-    
-    return render_template('recipe_page.html', **templateArgs)
+    else:
+        login = False
+        templateArgs = {
+        'recipe': recipe
+    }
+    return render_template('recipe_page.html', **templateArgs, logged_in=login)
     
 
  
@@ -319,7 +329,6 @@ def restaurant():
 
     my_headers = {'Authorization' : 'Bearer gJIaQ2GgBZJRE1iV61MUNNMIw8v_Q4x1aAKYFnq6TZrNQHsCwi1b8bpuDZ_MmWUk9paI5MDAYFtfkcrE_HCZZMQhf4L1yc0heQ4coxKhhELU7Cqdy2XUsAaik0C7YXYx'}
     r = requests.get(f'https://api.yelp.com/v3/businesses/search?location=NYC&categories={random_cats[x]}', headers=my_headers)
-    # print(r.json())
     return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login)
 
 @app.route('/restaurants/search', methods=['GET', 'POST'])
@@ -330,36 +339,63 @@ def restaurants_search():
     else:
         login = False
     
-    method = request.method
-    if method == 'GET':
-        s = request.args['location']
-        c = request.args['cuisine']
-    if method == 'POST':
-        s = request.form['location']
-        c = request.form['cuisine']
-   
-    s = s.lower()
-    
-    if c == "All":
-        c = 'restaurants'
-    else:
-        c = c.lower()
     my_headers = {'Authorization' : 'Bearer gJIaQ2GgBZJRE1iV61MUNNMIw8v_Q4x1aAKYFnq6TZrNQHsCwi1b8bpuDZ_MmWUk9paI5MDAYFtfkcrE_HCZZMQhf4L1yc0heQ4coxKhhELU7Cqdy2XUsAaik0C7YXYx'}
-    # r = requests.get(f"https://api.yelp.com/v3/businesses/search?location=NYC&categories=restuarants&term={s}", headers=my_headers)
-    r = requests.get(f"https://api.yelp.com/v3/businesses/search?location={s}&categories={c}", headers=my_headers)
-    if s != "":
+    method = request.method
+
+
+    if method == 'GET':
+        keyword = request.args['keyword']
+        new_location = request.args['location']
+        cuisine = request.args['cuisine']
+    
+        #r = requests.get(f'https://api.yelp.com/v3/businesses/search?location=NYC&categories=restuarants', headers=my_headers)
+        #return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login)
+    if method == 'POST':
+        keyword = request.form['keyword']
+        new_location = request.form['location']
+        cuisine = request.form['cuisine']
+    
+    new_location = new_location.lower()
+    if cuisine == "All Cuisines":
+        cuisine = 'restaurants'
+    else:
+        cuisine = cuisine.lower()
+
+    #r = requests.get(f"https://api.yelp.com/v3/businesses/search?location=NYC&categories=restuarants&term={s}", headers=my_headers)
+    #r = requests.get(f"https://api.yelp.com/v3/businesses/search?location=NYC&categories={cuisine}", headers=my_headers)
+    #return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login) 
+
+    if new_location == "" and keyword == "":
+        r = requests.get(f"https://api.yelp.com/v3/businesses/search?location=NYC&categories={cuisine}", headers=my_headers)
+        return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login) 
+    elif new_location != "" and keyword != "":
+        r = requests.get(f"https://api.yelp.com/v3/businesses/search?location={new_location}&categories=restaurants&term={keyword}", headers=my_headers)
+        return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login) 
+    elif new_location != "" and keyword == "":
+        r = requests.get(f"https://api.yelp.com/v3/businesses/search?location={new_location}&categories={cuisine}", headers=my_headers)
+        return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login) 
+    elif keyword != "" and new_location == "":
+        r = requests.get(f"https://api.yelp.com/v3/businesses/search?location=NYC&categories=restaurants&term={keyword}", headers=my_headers)
         return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login) 
     else:
-        r = requests.get("https://api.yelp.com/v3/businesses/search?location=NYC&categories=restaurants", headers=my_headers)
-        return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login) 
+        return ""
 
 @app.route('/restaurants/view', methods=['GET', 'POST'])
 def restaurants_view():
+    login = False
+    if logged_in():
+        login = True
+    else:
+        login = False
     i = request.args.get('id')
     my_headers = {'Authorization' : 'Bearer gJIaQ2GgBZJRE1iV61MUNNMIw8v_Q4x1aAKYFnq6TZrNQHsCwi1b8bpuDZ_MmWUk9paI5MDAYFtfkcrE_HCZZMQhf4L1yc0heQ4coxKhhELU7Cqdy2XUsAaik0C7YXYx'}
     r = requests.get(f"https://api.yelp.com/v3/businesses/{i}", headers=my_headers)
-    # print(r.json())
-    return render_template('view_restaurant.html', res=r.json())
+    hours = r.json()['hours']
+    #open = False
+    #if r.json()['hours']['is_open_now'] == 'true':
+        #open = True
+    #print(hours)
+    return render_template('restaurant_page.html', res=r.json(), hours=hours, open=open, logged_in=login)
 
 @app.route('/recipes/search', methods=['GET', 'POST'])
 def recipes_search():

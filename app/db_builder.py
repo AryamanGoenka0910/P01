@@ -182,7 +182,7 @@ def create_comment(user_id, post_id, comment):
   
 def delete_comment(user_id, comment_id):
   c = db.cursor()
-  c.execute('DELETE FROM user_comment where user_id = ? AND comment_id == ?', (user_id, comment_id))
+  c.execute('DELETE FROM user_comment where comment_id == ?', [comment_id])
   db.commit()
 
 def get_comments(post_id, offset, limit):

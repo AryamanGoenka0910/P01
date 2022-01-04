@@ -309,11 +309,8 @@ def recipe_page(recipe_id):
 
 @app.route('/restaurants', methods=['GET', 'POST'])
 def restaurant():
-    login = False
-    if logged_in():
-        login = True
-    else:
-        login = False
+    if not logged_in():
+        return redirect(url_for('landing'))
 
     random_cats = ['pizza', 'indpak', 'japanese', 'chinese', 'vegan', 'restuarants']
     x = random.randrange(0,5)
@@ -321,7 +318,7 @@ def restaurant():
     my_headers = {'Authorization' : 'Bearer gJIaQ2GgBZJRE1iV61MUNNMIw8v_Q4x1aAKYFnq6TZrNQHsCwi1b8bpuDZ_MmWUk9paI5MDAYFtfkcrE_HCZZMQhf4L1yc0heQ4coxKhhELU7Cqdy2XUsAaik0C7YXYx'}
     r = requests.get(f'https://api.yelp.com/v3/businesses/search?location=NYC&categories={random_cats[x]}', headers=my_headers)
     # print(r.json())
-    return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login)
+    return render_template('restaurants.html', data=r.json()['businesses'], username=session.get('username'))
 
 @app.route('/restaurants/search', methods=['GET', 'POST'])
 def restaurants_search():

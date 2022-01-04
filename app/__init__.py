@@ -14,7 +14,7 @@ import requests
 import random
 import recipes
 import base64
-
+import usda_api
 app = Flask(__name__)
 app.secret_key = 'Mango'
 
@@ -302,13 +302,15 @@ def recipe_page(recipe_id):
     if logged_in():
         login = True
         templateArgs = {
+        'usda_api': usda_api,
         'recipe': recipe,
         'username': session.get('username'),
         'user_id': db_builder.get_id_from_username(session.get('username'))
-    }
+        }
     else:
         login = False
         templateArgs = {
+        'usda_api': usda_api,
         'recipe': recipe
     }
     return render_template('recipe_page.html', **templateArgs, logged_in=login)
@@ -318,18 +320,16 @@ def recipe_page(recipe_id):
 
 @app.route('/restaurants', methods=['GET', 'POST'])
 def restaurant():
-    login = False
-    if logged_in():
-        login = True
-    else:
-        login = False
+    if not logged_in():
+        return redirect(url_for('landing'))
 
     random_cats = ['pizza', 'indpak', 'japanese', 'chinese', 'vegan', 'restuarants']
     x = random.randrange(0,5)
 
     my_headers = {'Authorization' : 'Bearer gJIaQ2GgBZJRE1iV61MUNNMIw8v_Q4x1aAKYFnq6TZrNQHsCwi1b8bpuDZ_MmWUk9paI5MDAYFtfkcrE_HCZZMQhf4L1yc0heQ4coxKhhELU7Cqdy2XUsAaik0C7YXYx'}
     r = requests.get(f'https://api.yelp.com/v3/businesses/search?location=NYC&categories={random_cats[x]}', headers=my_headers)
-    return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login)
+    return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login, username=session.get('username'))
+    
 
 @app.route('/restaurants/search', methods=['GET', 'POST'])
 def restaurants_search():

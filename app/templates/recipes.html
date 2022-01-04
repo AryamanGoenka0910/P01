@@ -80,6 +80,7 @@
                   View
                 </button>
               </a>
+              {% if logged_in %}
               <button
                 id="element{{recipe['id']}}"
                 class="btn-light rounded"
@@ -116,7 +117,7 @@
                   />
                 </svg>
               </button>
-
+              {% endif %}
               <script>
                 (function () {
                   let filledHeart = document.getElementById(

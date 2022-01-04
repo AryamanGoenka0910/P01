@@ -70,6 +70,9 @@ haotianG -- 2022-02-01 4:30
 - Saving/favoriting recipe functionality
 - Breaking changes to the database: I'm currently working on getting profiles set up. Don't worry! 
 
+sadidE -- 2022-04-12 01:45
+- Updated the formatting for the login and register forms.
+
 
 
 

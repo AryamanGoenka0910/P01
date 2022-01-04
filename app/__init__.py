@@ -401,7 +401,7 @@ def restaurants_view():
     #if r.json()['hours']['is_open_now'] == 'true':
         #open = True
     #print(hours)
-    return render_template('restaurant_page.html', res=r.json(), hours=hours, open=open, logged_in=login)
+    return render_template('restaurant_page.html', res=r.json(), hours=hours, open=open, logged_in=login, username=session.get('username'))
 
 @app.route('/recipes/search', methods=['GET', 'POST'])
 def recipes_search():

@@ -339,6 +339,8 @@ def restaurant():
 
 @app.route('/restaurants/search', methods=['GET', 'POST'])
 def restaurants_search():
+    if not logged_in():
+        return redirect(url_for('landing'))    
     login = False
     if logged_in():
         login = True
@@ -405,6 +407,8 @@ def restaurants_view():
 
 @app.route('/recipes/search', methods=['GET', 'POST'])
 def recipes_search():
+    if not logged_in():
+        return redirect(url_for('landing'))
     login = False
     if logged_in():
         login = True

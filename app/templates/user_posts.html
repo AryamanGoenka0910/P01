@@ -417,8 +417,8 @@
                           style="max-height: 75vh; width: auto; height: 75vh; max-width: 65vw;"
                         />
                         <!-- Comment Section -->
-                        <main style="display: flex; flex-direction: column;">
-                          <section class="p-3" style="overflow-y: scroll; height: 55vh;">
+                        <main style="display: flex; flex-direction: column; height: 75vh;">
+                          <section class="p-3" style="overflow-y: scroll; height: 90%">
                             <div
                               style="
                                 display: flex;
@@ -564,7 +564,7 @@
                             </main>
                           </section>
                           <section style="display: flex; align-items: center; height: 5vh; justify-content: space-evenly;">
-                            <textarea id="create_comment_{{post['post_id']}}" rows="1" placeholder="Add a comment" style="width: 80%; resize: none;"></textarea>
+                            <textarea id="create_comment_{{post['post_id']}}" rows="1" placeholder="Add a comment..." style="width: 80%; resize: none;"></textarea>
                             <a id="post_comment_{{post['post_id']}}" style="text-decoration: none; padding: 2.5px 12.5px; cursor: pointer;" class="btn-primary rounded">Post</a>
                           </section>
                           <script>

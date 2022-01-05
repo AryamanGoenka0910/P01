@@ -26,7 +26,7 @@
 </head>
 <body>
     <div class="container">
-      <h1 style="display: flex; align-items: center; justify-content: center">
+      <h1 class="text-primary mb-4" style="display: flex; align-items: center; justify-content: center">
         <span>{{res['name']}}</span>
       </h1>
       <img
@@ -38,8 +38,8 @@
     </div>
 
     <div class="row row-cols-1 row-cols-md-3 g-4">
-        <div class="col">
-          <div class="card h-100">
+        <div class="col" style="margin-bottom: 30px;">
+          <div class="card h-100" style="margin-left: 50px; margin-right: 10px;">
             <h4 class="card-header">Details</h4>
             <div class="card-body">
               <h5 class="card-title">Cuisines</h5>
@@ -54,8 +54,8 @@
           </div>
         </div>
 
-        <div class="col">
-          <div class="card h-100">
+        <div class="col" style="margin-bottom: 30px;">
+          <div class="card h-100" style="margin-left: 10px; margin-right: 10px;">
             <h5 class="card-header">Hours</h5>
             <div class="card-body">
                 {% if open %}
@@ -70,8 +70,8 @@
           </div>
         </div>
 
-        <div class="col">
-          <div class="card h-100">
+        <div class="col" style="margin-bottom: 30px;">
+          <div class="card h-100" style="margin-left: 10px; margin-right: 50px;">
             <h4 class="card-header">Contact</h4>
             <div class="card-body">
               <a href="{{res['url']}}">Website</a>

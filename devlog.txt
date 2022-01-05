@@ -61,6 +61,10 @@ sadidE -- 2021-19-12 8:40
 - Find restaurants based off input text
 - autocomplete search results based of input text
 
+haotianG -- 2021-21-2021 12:00
+- Makeshift fix for getting rid of HTML tags in spoonacular summary json data using regex
+- Working on individual recipe pages now
+
 sadidE -- 2021-22-12 8:40
 - Made a dropdown form for the cuisine search
 - User can now unput their location when searching
@@ -70,14 +74,38 @@ haotianG -- 2022-02-01 4:30
 - Saving/favoriting recipe functionality
 - Breaking changes to the database: I'm currently working on getting profiles set up. Don't worry! 
 
+haotianG -- 2022-02-01 9:30
+- Finished up upload photo feature for all pages
+- Finished display name / bio changes
+- Added "Bookmark feature" to recipe pages
+
+haotianG -- 2022-03-01 9:30
+- Instagram-like profile page with favorite restaurants, favorite recipes, and user posts
+- Comment system added 
+- Finished getting USDA api working for each ingredient in a spoonacular recipe
+- Deleting posts now works
+- You can now use "openModal" as a query in /user/{username}/user_posts to open up a post that the user has (if it exists)
+
 aryamanG 2021-03-01 19:00
 - fixed restaurants page
 - fixed bugs in routing
 - added bootstrap styling to certain pages
+
+haotianG -- 2022-04-01 9:30
+- Finished up home page with random posts and random user suggestions
+- Working on adding bookmarks to restaurant pages
+- Many fixes to making sure you can't delete other people's posts / use buttons you're not supposed to
 
 sadidE -- 2022-04-01 01:45
 - Updated the formatting for the login and register forms.
 
 aryamanG 2021-04-01 23:00
 - allowed users to utilize api without loggin in
+
+haotianG -- 2022-05-01 3:30
+- Final changes after restaurant bookmark bug was discovered
+- Updated design doc
+- Added our apis to the api_kb
+- API key management system working / ready for presentation 
+
 

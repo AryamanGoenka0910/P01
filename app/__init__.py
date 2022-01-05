@@ -129,6 +129,7 @@ def display_user_profile(username):
         "user_personal_info": db_builder.get_user_info(user_id),
         "username": username,
         "user_id": user_id,
+        "viewing_username": session.get('username')
         
     }
     
@@ -147,7 +148,8 @@ def display_user_favoriteRestaurants(username):
         "user_favorite_restaurant_count": db_builder.get_favorite_restaurant_count(user_id),
         "username": username,
         "user_id": user_id,
-        "lookingAtOwnBlog": session.get('username') == username
+        "lookingAtOwnBlog": session.get('username') == username,
+        "viewing_username": session.get('username')
     }
     
     return render_template("favorite_restaurants.html", **templateArgs)
@@ -165,7 +167,8 @@ def display_user_favoriteRecipes(username):
         "user_favorite_restaurant_count": db_builder.get_favorite_restaurant_count(user_id),
         "username": username,
         "user_id": user_id,
-        "lookingAtOwnBlog": session.get('username') == username
+        "lookingAtOwnBlog": session.get('username') == username,
+        "viewing_username": session.get('username')
     }
     
     return render_template("favorite_recipes.html", **templateArgs)
@@ -188,7 +191,8 @@ def display_user_posts(username):
         "username": username,
         "user_id": user_id,
         "lookingAtOwnBlog": session.get('username') == username,
-        "viewer_user_id": db_builder.get_id_from_username(session.get('username'))
+        "viewer_user_id": db_builder.get_id_from_username(session.get('username')),
+        "viewing_username": session.get('username')
     }
    
     
@@ -414,18 +418,19 @@ def restaurants_search():
     #r = requests.get(f"https://api.yelp.com/v3/businesses/search?location=NYC&categories={cuisine}", headers=my_headers)
     #return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login) 
     username = session.get('username')
+    user_id = db_builder.get_id_from_username(username)
     if new_location == "" and keyword == "":
         r = requests.get(f"https://api.yelp.com/v3/businesses/search?location=NYC&categories={cuisine}", headers=my_headers)
-        return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login, username=username) 
+        return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login, username=username, user_id=user_id) 
     elif new_location != "" and keyword != "":
         r = requests.get(f"https://api.yelp.com/v3/businesses/search?location={new_location}&categories=restaurants&term={keyword}", headers=my_headers)
-        return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login, username=username) 
+        return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login, username=username, user_id=user_id) 
     elif new_location != "" and keyword == "":
         r = requests.get(f"https://api.yelp.com/v3/businesses/search?location={new_location}&categories={cuisine}", headers=my_headers)
-        return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login, username=username) 
+        return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login, username=username, user_id=user_id) 
     elif keyword != "" and new_location == "":
         r = requests.get(f"https://api.yelp.com/v3/businesses/search?location=NYC&categories=restaurants&term={keyword}", headers=my_headers)
-        return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login, username=username) 
+        return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login, username=username, user_id=user_id) 
     else:
         return ""
 
@@ -444,7 +449,7 @@ def restaurants_view():
     #if r.json()['hours']['is_open_now'] == 'true':
         #open = True
     #print(hours)
-    return render_template('restaurant_page.html', res=r.json(), hours=hours, open=open, logged_in=login, username=session.get('username'))
+    return render_template('restaurant_page.html', res=r.json(), hours=hours, open=open, logged_in=login, username=session.get('username'), user_id=db_builder.get_id_from_username(session.get('username')))
 
 @app.route('/recipes/search', methods=['GET', 'POST'])
 def recipes_search():

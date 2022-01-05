@@ -29,7 +29,7 @@
   </head>
   <body>
     <div class="container">
-      <div class="mx-auto" style="max-width: 800px">
+      <div class="mx-auto" style="max-width: 860px">
         <div class="row sm">
           <div class="col-8">
             {% for post in db_builder.get_random_posts(50) %}
@@ -51,7 +51,7 @@
               <img
                 id="post_{{post['post_id']}}"
                 src="{{post['image_link']}}"
-                style="padding: 0px"
+                style="padding: 0px; cursor: pointer"
               />
               <script>
                 (function () {

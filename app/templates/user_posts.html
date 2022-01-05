@@ -22,10 +22,11 @@
             <a class="nav-link" href="/recipes/search">Recipes</a>
           </li>
           <li class="nav-item active">
-            <a class="nav-link" href="/user/{{username}}/saved_recipes"
+            <a class="nav-link" href="/user/{{viewing_username}}/saved_recipes"
               >Profile</a
             >
           </li>
+          {% if lookingAtOwnBlog %}
           <li style="padding: 0 10px">
             <button
               type="button"
@@ -131,6 +132,7 @@
               </div>
             </div>
           </li>
+          {% endif %}
         </ul>
       </div>
     </nav>

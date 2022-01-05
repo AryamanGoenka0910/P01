@@ -430,6 +430,13 @@ def recipes_search():
             query = request.form.get("search")
             return render_template('recipes.html', recipes=recipes.searchRecipes(query))
 
+@app.route('/test', methods=['GET'])
+def test():
+    cuisines_1 = ['African' , 'British' , 'Cajun' , 'Caribbean', 'Chinese' , 'Eastern European' , 'European' , 'French']
+    cuisines_2 = ['German' , 'Greek' , 'Indian' , 'Irish' , 'Italian' , 'Japanese' , 'Jewish' , 'Korean' , 'Latin American']
+    cuisines_3 = ['Mediterranean' , 'Mexican' , 'Middle Eastern' , 'Southern' , 'Spanish' , 'Thai' , 'Vietnamese' , 'American']
+    return render_template('inputinfo.html', cuisines_1=cuisines_1, cuisines_2=cuisines_2, cuisines_3=cuisines_3)
+
 if __name__ == '__main__':
     app.debug = True
     app.run()

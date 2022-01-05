@@ -78,8 +78,6 @@ aryamanG 2021-03-01 19:00
 sadidE -- 2022-04-01 01:45
 - Updated the formatting for the login and register forms.
 
-
-
-
-
+aryamanG 2021-04-01 23:00
+- allowed users to utilize api without loggin in
 

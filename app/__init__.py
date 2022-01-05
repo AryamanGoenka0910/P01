@@ -212,7 +212,7 @@ def make_comment():
         return redirect(url_for('landing'))
     user_id = db_builder.get_id_from_username(session.get('username'))
     db_builder.create_comment(user_id, request.json['post_id'], request.json['comment'])
-    print((user_id, request.json['post_id'], request.json['comment']))
+    #print((user_id, request.json['post_id'], request.json['comment']))
     return {
         "successful": True
     }
@@ -268,7 +268,7 @@ def delete_post():
 
 @app.route('/api/is_post_favorited', methods=['POST'])
 def is_post_favorited():
-    print(request.json)
+    #print(request.json)
     user_id = request.json['user_id']
     post_id = request.json['post_id']
     return {
@@ -285,7 +285,7 @@ def is_recipe_favorited():
 
 @app.route('/api/favorite_recipe', methods=['POST'])
 def favorite_recipe():
-    print(request.data)
+    #print(request.data)
     user_id = request.json['user_id']
     recipe_id = request.json['recipe_id']
     db_builder.favorite_recipe(user_id, recipe_id, recipes.getRecipeInformation(recipe_id))
@@ -294,7 +294,7 @@ def favorite_recipe():
 
 @app.route('/api/unfavorite_recipe', methods=['POST'])
 def unfavorite_recipe():
-    print(request.data)
+    #print(request.data)
     user_id = request.json['user_id']
     recipe_id = request.json['recipe_id']
     db_builder.unfavorite_recipe(user_id, recipe_id)
@@ -316,7 +316,7 @@ def is_restaurant_favorited():
 
 @app.route('/api/favorite_restaurant', methods=['POST'])
 def favorite_restaurant():
-    print(request.data)
+    #print(request.data)
     user_id = request.json['user_id']
     restaurant_id = request.json['restaurant_id']
     db_builder.favorite_restaurant(user_id, restaurant_id, get_restaurantJSON_by_id(restaurant_id))
@@ -360,21 +360,28 @@ def recipe_page(recipe_id):
 
 @app.route('/restaurants', methods=['GET', 'POST'])
 def restaurant():
-    if not logged_in():
-        return redirect(url_for('landing'))
+    
+    login = False
+    if logged_in():
+        login = True
+    else:
+        login = False
 
     random_cats = ['pizza', 'indpak', 'japanese', 'chinese', 'vegan', 'restuarants']
     x = random.randrange(0,5)
 
     my_headers = {'Authorization' : 'Bearer gJIaQ2GgBZJRE1iV61MUNNMIw8v_Q4x1aAKYFnq6TZrNQHsCwi1b8bpuDZ_MmWUk9paI5MDAYFtfkcrE_HCZZMQhf4L1yc0heQ4coxKhhELU7Cqdy2XUsAaik0C7YXYx'}
     r = requests.get(f'https://api.yelp.com/v3/businesses/search?location=NYC&categories={random_cats[x]}', headers=my_headers)
-    return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login, username=session.get('username'), user_id=db_builder.get_id_from_username(session.get('username')))
+    
+    if logged_in():
+        return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login, username=session.get('username'), user_id=db_builder.get_id_from_username(session.get('username')))
+    else: 
+        return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login)
     
 
 @app.route('/restaurants/search', methods=['GET', 'POST'])
 def restaurants_search():
-    if not logged_in():
-        return redirect(url_for('landing'))    
+    
     login = False
     if logged_in():
         login = True
@@ -441,8 +448,6 @@ def restaurants_view():
 
 @app.route('/recipes/search', methods=['GET', 'POST'])
 def recipes_search():
-    if not logged_in():
-        return redirect(url_for('landing'))
     login = False
     if logged_in():
         login = True
@@ -463,13 +468,6 @@ def recipes_search():
         if(request.method == 'POST'):
             query = request.form.get("search")
             return render_template('recipes.html', recipes=recipes.searchRecipes(query))
-
-@app.route('/test', methods=['GET'])
-def test():
-    cuisines_1 = ['African' , 'British' , 'Cajun' , 'Caribbean', 'Chinese' , 'Eastern European' , 'European' , 'French']
-    cuisines_2 = ['German' , 'Greek' , 'Indian' , 'Irish' , 'Italian' , 'Japanese' , 'Jewish' , 'Korean' , 'Latin American']
-    cuisines_3 = ['Mediterranean' , 'Mexican' , 'Middle Eastern' , 'Southern' , 'Spanish' , 'Thai' , 'Vietnamese' , 'American']
-    return render_template('inputinfo.html', cuisines_1=cuisines_1, cuisines_2=cuisines_2, cuisines_3=cuisines_3)
 
 if __name__ == '__main__':
     app.debug = True

@@ -32,7 +32,6 @@ def getRecipeInformation(recipe_id):
       recipe['summary'] = ".".join(sentences)
       recipe['summary'] = re.sub('<[^>]*>', '', recipe['summary'])
       break
-  print(json.dumps(r.json()))
   return recipe
 
 

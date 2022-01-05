@@ -13,4 +13,3 @@ def searchFood(query):
   return None
 
 
-print(searchFood("beefsteak tomatoes"))

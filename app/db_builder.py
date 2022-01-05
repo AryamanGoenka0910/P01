@@ -55,6 +55,9 @@ def dbsetup():
   command = "CREATE TABLE IF NOT EXISTS user_post (post_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, user_id INTEGER NOT NULL, recipe_id INTEGER, image_link TEXT, post_description TEXT)"
   c.execute(command) 
 
+  command = "CREATE TABLE IF NOT EXISTS user_favorite_restaurant (user_id INTEGER, restaurant_id TEXT NOT NULL, restaurantJSON TEXT)"
+  c.execute(command)
+
   # Post Comments:
   command = "CREATE TABLE IF NOT EXISTS user_comment (comment_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, user_id INTEGER NOT NULL, post_id INTEGER NOT NULL, comment TEXT)"
   c.execute(command) 
@@ -173,6 +176,35 @@ def is_recipe_favorited(user_id, post_id):
     return True
   else:
     return False
+
+#Favorite Restaurants
+def favorite_restaurant(user_id, restaurant_id, restaurantJSON):
+  restaurantJSON = json.dumps(restaurantJSON)
+  c = db.cursor()
+  c.execute("INSERT INTO user_favorite_restaurant VALUES(?, ?, ?)", (user_id, restaurant_id, restaurantJSON))
+  db.commit()
+
+def get_favorite_restaurant(user_id, offset, limit):
+    c = db.cursor()
+    result = list(c.execute(f'SELECT user_id, restaurant_id, restaurantJSON FROM user_favorite_restaurant WHERE user_id == ? order by rowid DESC limit ? offset ? ', (user_id, limit, offset)))
+    return [{
+        "user_id": user_id,
+        "restaurant_id": restaurant_id,
+        "restaurantJSON": json.loads(restaurantJSON),
+    } for (user_id, restaurant_id, restaurantJSON) in result] #all the entries of a user
+
+def unfavorite_restaurant(user_id, restaurant_id):
+  c = db.cursor()
+  c.execute("DELETE FROM user_favorite_restaurant where user_id = ? and restaurant_id = ?", (user_id, restaurant_id))
+  db.commit()
+
+def is_restaurant_favorited(user_id, restaurant_id):
+  c = db.cursor()
+  c.execute("SELECT * FROM user_favorite_restaurant where user_id = ? and restaurant_id = ?", (user_id, restaurant_id))
+  if c.fetchone():
+    return True
+  else:
+    return False
   
 
 def create_comment(user_id, post_id, comment):
@@ -203,6 +235,10 @@ def get_favorite_recipe_count(user_id):
 def get_user_post_count(user_id):
   c = db.cursor()
   return len(list(c.execute("SELECT * FROM user_post WHERE user_id = ?", [user_id])))
+
+def get_favorite_restaurant_count(user_id):
+  c = db.cursor()
+  return len(list(c.execute("SELECT * FROM user_favorite_restaurant WHERE user_id = ?", [user_id])))
 
 
 def create_user_info(user_id):

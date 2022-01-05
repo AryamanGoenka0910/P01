@@ -134,6 +134,24 @@ def display_user_profile(username):
     
     return render_template("edit_profile.html", **templateArgs)
 
+@app.route('/user/<string:username>/saved_restaurants', methods=['GET'])
+def display_user_favoriteRestaurants(username):
+    if not logged_in:
+        return redirect(url_for('landing'))
+    user_id = db_builder.get_id_from_username(username)
+    templateArgs = {
+        "favorite_restaurants" : db_builder.get_favorite_restaurant(user_id, 0, 50),
+        "user_personal_info": db_builder.get_user_info(user_id),
+        "user_post_count": db_builder.get_user_post_count(user_id),
+        "user_favorite_recipe_count": db_builder.get_favorite_recipe_count(user_id),
+        "user_favorite_restaurant_count": db_builder.get_favorite_restaurant_count(user_id),
+        "username": username,
+        "user_id": user_id,
+        "lookingAtOwnBlog": session.get('username') == username
+    }
+    
+    return render_template("favorite_restaurants.html", **templateArgs)
+
 @app.route('/user/<string:username>/saved_recipes', methods=['GET'])
 def display_user_favoriteRecipes(username):
     if not logged_in:
@@ -144,29 +162,13 @@ def display_user_favoriteRecipes(username):
         "user_personal_info": db_builder.get_user_info(user_id),
         "user_post_count": db_builder.get_user_post_count(user_id),
         "user_favorite_recipe_count": db_builder.get_favorite_recipe_count(user_id),
+        "user_favorite_restaurant_count": db_builder.get_favorite_restaurant_count(user_id),
         "username": username,
         "user_id": user_id,
         "lookingAtOwnBlog": session.get('username') == username
     }
     
     return render_template("favorite_recipes.html", **templateArgs)
-
-@app.route('/user/<string:username>/user_comments', methods=['GET'])
-def display_user_comments(username):
-    if not logged_in:
-        return redirect(url_for('landing'))
-    user_id = db_builder.get_id_from_username(username)
-    templateArgs = {
-        "user_comments": db_builder.get_comments(user_id, 0, 50),
-        "user_personal_info": db_builder.get_user_info(user_id),
-        "user_post_count": db_builder.get_user_post_count(user_id),
-        "user_favorite_recipe_count": db_builder.get_favorite_recipe_count(user_id),
-        "username": username,
-        "user_id": user_id,
-        "lookingAtOwnBlog": session.get('username') == username
-    }
-    
-    return render_template("user_comments.html", **templateArgs)
 
 @app.route('/user/<string:username>/user_posts', methods=['GET'])
 def display_user_posts(username):
@@ -182,6 +184,7 @@ def display_user_posts(username):
         "user_personal_info": db_builder.get_user_info(user_id),
         "user_post_count": db_builder.get_user_post_count(user_id),
         "user_favorite_recipe_count": db_builder.get_favorite_recipe_count(user_id),
+        "user_favorite_restaurant_count": db_builder.get_favorite_restaurant_count(user_id),
         "username": username,
         "user_id": user_id,
         "lookingAtOwnBlog": session.get('username') == username,
@@ -263,14 +266,6 @@ def delete_post():
     db_builder.delete_post(user_id, post_id)
     return redirect(f'/user/{username}/user_posts')
 
-@app.route('/api/is_recipe_favorited', methods=['POST'])
-def is_recipe_favorited():
-    user_id = request.json['user_id']
-    recipe_id = request.json['recipe_id']
-    return {
-        'favorited': db_builder.is_recipe_favorited(user_id, recipe_id)
-    }
-
 @app.route('/api/is_post_favorited', methods=['POST'])
 def is_post_favorited():
     print(request.json)
@@ -278,6 +273,14 @@ def is_post_favorited():
     post_id = request.json['post_id']
     return {
         'favorited': db_builder.is_post_favorited(user_id, post_id)
+    }
+
+@app.route('/api/is_recipe_favorited', methods=['POST'])
+def is_recipe_favorited():
+    user_id = request.json['user_id']
+    recipe_id = request.json['recipe_id']
+    return {
+        'favorited': db_builder.is_recipe_favorited(user_id, recipe_id)
     }
 
 @app.route('/api/favorite_recipe', methods=['POST'])
@@ -296,6 +299,37 @@ def unfavorite_recipe():
     recipe_id = request.json['recipe_id']
     db_builder.unfavorite_recipe(user_id, recipe_id)
     return {"message": "Successfully unfavorited recipe"}
+
+### Restaurants
+def get_restaurantJSON_by_id(restaurant_id):
+  my_headers = {'Authorization' : 'Bearer gJIaQ2GgBZJRE1iV61MUNNMIw8v_Q4x1aAKYFnq6TZrNQHsCwi1b8bpuDZ_MmWUk9paI5MDAYFtfkcrE_HCZZMQhf4L1yc0heQ4coxKhhELU7Cqdy2XUsAaik0C7YXYx'}
+  r = requests.get(f'https://api.yelp.com/v3/businesses/{restaurant_id}', headers=my_headers)
+  return r.json()
+
+@app.route('/api/is_restaurant_favorited', methods=['POST'])
+def is_restaurant_favorited():
+    user_id = request.json['user_id']
+    restaurant_id = request.json['restaurant_id']
+    return {
+        'favorited': db_builder.is_restaurant_favorited(user_id, restaurant_id)
+    }
+
+@app.route('/api/favorite_restaurant', methods=['POST'])
+def favorite_restaurant():
+    print(request.data)
+    user_id = request.json['user_id']
+    restaurant_id = request.json['restaurant_id']
+    db_builder.favorite_restaurant(user_id, restaurant_id, get_restaurantJSON_by_id(restaurant_id))
+    return {"message": "Successfully favorited restaurant"}
+    
+
+@app.route('/api/unfavorite_restaurant', methods=['POST'])
+def unfavorite_restaurant():
+    print(request.data)
+    user_id = request.json['user_id']
+    restaurant_id = request.json['restaurant_id']
+    db_builder.unfavorite_restaurant(user_id, restaurant_id)
+    return {"message": "Successfully unfavorited restaurant"}
 
   
 ####API FUNCTIONS#####
@@ -334,7 +368,7 @@ def restaurant():
 
     my_headers = {'Authorization' : 'Bearer gJIaQ2GgBZJRE1iV61MUNNMIw8v_Q4x1aAKYFnq6TZrNQHsCwi1b8bpuDZ_MmWUk9paI5MDAYFtfkcrE_HCZZMQhf4L1yc0heQ4coxKhhELU7Cqdy2XUsAaik0C7YXYx'}
     r = requests.get(f'https://api.yelp.com/v3/businesses/search?location=NYC&categories={random_cats[x]}', headers=my_headers)
-    return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login, username=session.get('username'))
+    return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login, username=session.get('username'), user_id=db_builder.get_id_from_username(session.get('username')))
     
 
 @app.route('/restaurants/search', methods=['GET', 'POST'])
@@ -372,19 +406,19 @@ def restaurants_search():
     #r = requests.get(f"https://api.yelp.com/v3/businesses/search?location=NYC&categories=restuarants&term={s}", headers=my_headers)
     #r = requests.get(f"https://api.yelp.com/v3/businesses/search?location=NYC&categories={cuisine}", headers=my_headers)
     #return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login) 
-
+    username = session.get('username')
     if new_location == "" and keyword == "":
         r = requests.get(f"https://api.yelp.com/v3/businesses/search?location=NYC&categories={cuisine}", headers=my_headers)
-        return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login) 
+        return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login, username=username) 
     elif new_location != "" and keyword != "":
         r = requests.get(f"https://api.yelp.com/v3/businesses/search?location={new_location}&categories=restaurants&term={keyword}", headers=my_headers)
-        return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login) 
+        return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login, username=username) 
     elif new_location != "" and keyword == "":
         r = requests.get(f"https://api.yelp.com/v3/businesses/search?location={new_location}&categories={cuisine}", headers=my_headers)
-        return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login) 
+        return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login, username=username) 
     elif keyword != "" and new_location == "":
         r = requests.get(f"https://api.yelp.com/v3/businesses/search?location=NYC&categories=restaurants&term={keyword}", headers=my_headers)
-        return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login) 
+        return render_template('restaurants.html', data=r.json()['businesses'], logged_in=login, username=username) 
     else:
         return ""
 

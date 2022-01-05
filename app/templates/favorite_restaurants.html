@@ -124,13 +124,7 @@
           href="/user/{{username}}/saved_recipes"
           class="text-decoration-none text-black"
         >
-          <section
-            style="
-              padding-top: 19px;
-              padding-bottom: 20px;
-              border-top: 1px black solid;
-            "
-          >
+          <section style="padding-top: 20px; padding-bottom: 20px">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -154,7 +148,13 @@
           href="/user/{{username}}/saved_restaurants"
           class="text-decoration-none text-black"
         >
-          <section style="padding-top: 20px; padding-bottom: 20px">
+          <section
+            style="
+              padding-top: 19px;
+              padding-bottom: 20px;
+              border-top: 1px black solid;
+            "
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -173,9 +173,9 @@
       </div>
       <div>
         <div class="row g-5">
-          {% for recipe in favorite_recipes %}
+          {% for restaurant in favorite_restaurants %}
           <div class="col-4">
-            <a href="/recipe/{{recipe['spoonacularRecipeJSON']['id']}}">
+            <a href="/restaurants/view?id={{restaurant['restaurant_id']}}">
               <div
                 style="
                   width: 293px;
@@ -189,7 +189,7 @@
               >
                 <img
                   style="height: 310px"
-                  src="{{recipe['spoonacularRecipeJSON']['image'] if recipe['spoonacularRecipeJSON']['image'] else 'https://spoonacular.com/recipeImages/624194-556x370.jpg'}}"
+                  src="{{restaurant['restaurantJSON']['image_url']}}"
                 />
               </div>
             </a>

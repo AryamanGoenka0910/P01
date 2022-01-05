@@ -1,6 +1,6 @@
-api_key = 'YVKKDBfyvvkgKvFKDzTOwWjUOlP2QWBlWJb6C4Xh'
+import keyManager
 import requests
-
+api_key = keyManager.usdaKey
 def searchFood(query):
   r = requests.get("https://api.nal.usda.gov/fdc/v1/foods/search", 
   params={'api_key': api_key, 'query': query, 'pageSize': 1})

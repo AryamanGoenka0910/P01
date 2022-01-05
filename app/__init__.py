@@ -4,6 +4,7 @@ Softdev
 P00: ArRESTed Development
 2021-12-12
 '''
+import os
 import re
 import sqlite3
 from weakref import KeyedRef
@@ -17,6 +18,12 @@ import base64
 import usda_api
 app = Flask(__name__)
 app.secret_key = 'Mango'
+
+import keyManager
+print("Yelp Key = ", keyManager.yelpKey)
+print("USDA Key = ", keyManager.usdaKey)
+print("Spoonacular Key = ", keyManager.spoonacularKey)
+
 
 
 # Utility function to check if there is a session
@@ -306,7 +313,7 @@ def unfavorite_recipe():
 
 ### Restaurants
 def get_restaurantJSON_by_id(restaurant_id):
-  my_headers = {'Authorization' : 'Bearer gJIaQ2GgBZJRE1iV61MUNNMIw8v_Q4x1aAKYFnq6TZrNQHsCwi1b8bpuDZ_MmWUk9paI5MDAYFtfkcrE_HCZZMQhf4L1yc0heQ4coxKhhELU7Cqdy2XUsAaik0C7YXYx'}
+  my_headers = {'Authorization' : f'Bearer {keyManager.yelpKey}'}
   r = requests.get(f'https://api.yelp.com/v3/businesses/{restaurant_id}', headers=my_headers)
   return r.json()
 
@@ -374,7 +381,7 @@ def restaurant():
     random_cats = ['pizza', 'indpak', 'japanese', 'chinese', 'vegan', 'restuarants']
     x = random.randrange(0,5)
 
-    my_headers = {'Authorization' : 'Bearer gJIaQ2GgBZJRE1iV61MUNNMIw8v_Q4x1aAKYFnq6TZrNQHsCwi1b8bpuDZ_MmWUk9paI5MDAYFtfkcrE_HCZZMQhf4L1yc0heQ4coxKhhELU7Cqdy2XUsAaik0C7YXYx'}
+    my_headers = {'Authorization' : f'Bearer {keyManager.yelpKey}'}
     r = requests.get(f'https://api.yelp.com/v3/businesses/search?location=NYC&categories={random_cats[x]}', headers=my_headers)
     
     if logged_in():
@@ -392,7 +399,7 @@ def restaurants_search():
     else:
         login = False
     
-    my_headers = {'Authorization' : 'Bearer gJIaQ2GgBZJRE1iV61MUNNMIw8v_Q4x1aAKYFnq6TZrNQHsCwi1b8bpuDZ_MmWUk9paI5MDAYFtfkcrE_HCZZMQhf4L1yc0heQ4coxKhhELU7Cqdy2XUsAaik0C7YXYx'}
+    my_headers = {'Authorization' : f'Bearer {keyManager.yelpKey}'}
     method = request.method
 
 
@@ -442,7 +449,7 @@ def restaurants_view():
     else:
         login = False
     i = request.args.get('id')
-    my_headers = {'Authorization' : 'Bearer gJIaQ2GgBZJRE1iV61MUNNMIw8v_Q4x1aAKYFnq6TZrNQHsCwi1b8bpuDZ_MmWUk9paI5MDAYFtfkcrE_HCZZMQhf4L1yc0heQ4coxKhhELU7Cqdy2XUsAaik0C7YXYx'}
+    my_headers = {'Authorization' : f'Bearer {keyManager.yelpKey}'}
     r = requests.get(f"https://api.yelp.com/v3/businesses/{i}", headers=my_headers)
     hours = r.json()['hours']
     #open = False

@@ -18,7 +18,7 @@ Discover new recipes, resturants, and friends interested in food with Foodbook. 
 
 The following instructions assume that you have [Python 3.9](https://www.python.org/downloads/ "Download Python") and [pip](https://pip.pypa.io/en/stable/installation. "Install pip") already installed.
 
-1. Clone this repo using `git clone https://github.com/AryamanGoenka0910/P00`
+1. Clone this repo using `git clone https://github.com/AryamanGoenka0910/P01`
 
 2. Create a new [virtual environment](https://docs.python.org/3/tutorial/venv.html "Virtual Environments in Python").
 

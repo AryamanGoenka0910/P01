@@ -25,7 +25,7 @@ The following instructions assume that you have [Python 3.9](https://www.python.
 `$ python3 -m venv your_env_name`<br>
 `$ source your_env_name/bin/activate`
 
-3. Install required modules using `(your_env_name) pip install -r requirement.txt`
+3. Install required modules using `(your_env_name) pip install -r requirements.txt`
 
 4. Add the files key_Spoonacular.txt, key_USDA.txt, and key_yelp.txt (the files with API Keys) to the "keys" folder
 

@@ -298,7 +298,9 @@ def get_random_users(count):
 
 def get_random_posts(count):
     c = db.cursor()
-    results = list(c.execute("SELECT * FROM user_post WHERE post_id IN (SELECT post_id FROM user_post ORDER BY RANDOM() LIMIT ?)", [count]))
+    results = list(c.execute("SELECT * FROM user_post"))
+    sample_size = count if count < len(results) else len(results)
+    results = random.sample(results, sample_size)
     return [{
         'post_id': post_id,
         'user_id': user_id,
